@@ -67,22 +67,27 @@
   user-select: none;
 }
 
-.big-mark .ch {
-  display: inline-block;
+/* wordmark is an SVG of the real letter outlines (see Footer.jsx / wordmark.js) */
+.big-mark svg {
+  display: block;
+  height: auto;
+  max-width: none;
+  overflow: visible;
 }
 
-.big-mark .it {
-  font-style: italic;
+.big-mark .ch {
+  fill: var(--paper);
+  stroke: var(--paper);
+  stroke-width: 4;
+  stroke-linejoin: round;
+  stroke-opacity: 0;
 }
 
 .big-mark .dot {
-  color: var(--red);
-  background: none;
-  width: auto;
-  height: auto;
-  border-radius: 0;
-  box-shadow: none;
-  animation: none;
+  fill: var(--red);
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
 }
 
 .foot-legal {

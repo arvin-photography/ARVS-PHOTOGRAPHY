@@ -678,22 +678,48 @@
   animation: sd-wheel 1.8s var(--ease) infinite;
 }
 
+/* the wheel drops further and brighter so the "scroll" gesture reads at a glance */
 @keyframes sd-wheel {
-  0% { transform: translateY(0); opacity: 0; }
-  20% { opacity: 1; }
-  70% { transform: translateY(11px); opacity: 0; }
-  100% { transform: translateY(11px); opacity: 0; }
+  0% { transform: translateY(0) scaleY(1); opacity: 0; }
+  15% { opacity: 1; }
+  60% { transform: translateY(14px) scaleY(1.5); opacity: 0; }
+  100% { transform: translateY(14px) scaleY(1); opacity: 0; }
 }
 
+/* the whole indicator bobs gently, in time with the wheel and arrow */
+.scroll-down button {
+  animation: sd-float 1.8s ease-in-out infinite;
+}
+
+@keyframes sd-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* the arrow drops further than the rest and fades, so it keeps "pointing" down */
 .sd-arrow {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1;
-  opacity: 0.6;
   animation: sd-bob 1.8s ease-in-out infinite;
 }
 
 @keyframes sd-bob {
-  50% { transform: translateY(5px); }
+  0%, 100% { transform: translateY(-2px); opacity: 0.35; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* the label breathes, slightly offset from the bob */
+.sd-label {
+  animation: sd-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes sd-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.scroll-down button:hover {
+  animation-play-state: paused;
 }
 
 .scroll-down button:hover .sd-mouse {
@@ -719,12 +745,8 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sd-mouse i,
-  .sd-arrow {
-    animation: none;
-  }
-}
+/* No reduced-motion opt-out here on purpose: it is a small in-place bob, and Windows
+   "Animation effects: off" (common) would otherwise freeze the only scroll hint. */
 
 .seq {
   background-image:
@@ -769,6 +791,13 @@
   letter-spacing: -0.015em;
   padding: 0.1em 0.18em 0.04em;
   white-space: nowrap;
+}
+
+/* desktop / landscape: lift the masthead clear of the 3D camera (its top sits at ~37vh) */
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) {
+  .hero-word {
+    top: 18vh;
+  }
 }
 
 .hero-word .hw {
