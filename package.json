@@ -1,0 +1,19 @@
+{
+  "name": "arv-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Scroll-driven 3D photography portfolio — React + Three.js client, Node/Express server",
+  "scripts": {
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently -n client,server -c magenta,cyan \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server",
+    "images": "python tools/images.py all"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

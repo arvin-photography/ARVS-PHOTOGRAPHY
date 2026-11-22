@@ -1,0 +1,64 @@
+/* Preloader styles. */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.pl-ui {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 26px var(--gut);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pl-top,
+.pl-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.pl-center {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+}
+
+.pl-count {
+  font-family: var(--serif);
+  font-size: clamp(6rem, 20vw, 17rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.pl-stop {
+  color: var(--red);
+  font-size: 13px;
+}
+
+.pl-bar {
+  flex: 1;
+  max-width: 340px;
+  height: 1px;
+  background: var(--line);
+}
+
+.pl-bar span {
+  display: block;
+  height: 100%;
+  background: var(--paper);
+  transform-origin: left;
+  transition: transform 0.2s linear;
+}

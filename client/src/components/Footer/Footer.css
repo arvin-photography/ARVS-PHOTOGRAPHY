@@ -1,0 +1,123 @@
+/* Footer styles. */
+
+.footer {
+  position: relative;
+  background: var(--ink);
+  padding: 9vh var(--gut) 3vh;
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.foot-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 4vh 3vw;
+  align-items: start;
+  font-size: 15px;
+}
+
+.foot-row > div {
+  display: grid;
+  gap: 6px;
+}
+
+.lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.foot-row a:hover {
+  color: var(--red);
+}
+
+.foot-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+
+.to-top {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 12px 20px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.to-top:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.big-mark {
+  display: flex;
+  overflow: hidden;
+  margin: 6vh -0.12em 0;
+  padding: 0.06em 0.12em 0;
+  font-family: var(--serif);
+  font-size: clamp(8rem, 36vw, 44rem);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  user-select: none;
+}
+
+.big-mark .ch {
+  display: inline-block;
+}
+
+.big-mark .it {
+  font-style: italic;
+}
+
+.big-mark .dot {
+  color: var(--red);
+  background: none;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+}
+
+.foot-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: 3vh;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 899px) {
+  .foot-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .foot-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer {
+  background-image: var(--grain);
+}
+
+.big-mark {
+  font-size: clamp(6rem, 27vw, 34rem);
+}
+
+.footer {
+  padding-bottom: calc(3vh + var(--sab));
+}

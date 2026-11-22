@@ -1,0 +1,16 @@
+# dependencies
+node_modules/
+
+# build output
+client/dist/
+
+# runtime data (contact-form submissions)
+server/data/messages.json
+
+# logs & OS / editor files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+__pycache__/

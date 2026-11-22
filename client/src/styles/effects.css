@@ -1,0 +1,45 @@
+/* Global camera effects: shutter curtains and flash. */
+
+.shutter-iris {
+  position: fixed;
+  z-index: 95;
+  visibility: hidden;
+}
+
+.shot-flash {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 94;
+}
+
+/* focal-plane shutter (phones/tablets): two curtains, transform-only = GPU-cheap */
+.shutter-curtains {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.shutter-curtains i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: #050505;
+  transform: scaleY(0);
+  will-change: transform;
+}
+
+.shutter-curtains i:first-child {
+  top: 0;
+  transform-origin: top;
+}
+
+.shutter-curtains i:last-child {
+  bottom: 0;
+  transform-origin: bottom;
+}

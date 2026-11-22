@@ -1,0 +1,150 @@
+/* Cursor styles. */
+
+.cursor {
+  display: none;
+}
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+html.has-cursor .cursor {
+  display: block;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99;
+}
+
+html.cursor-hidden .cursor {
+  visibility: hidden;
+}
+
+.cursor-dot,
+.cursor-ring {
+  opacity: 0;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  display: grid;
+  place-items: center;
+  transition: width 0.45s var(--ease), height 0.45s var(--ease), margin 0.45s var(--ease), scale 0.2s, background 0.3s;
+  mix-blend-mode: difference;
+}
+
+.cursor-ring i {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 0 solid #fff;
+}
+
+.cursor-ring i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 1.5px;
+  border-left-width: 1.5px;
+}
+
+.cursor-ring i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 1.5px;
+  border-right-width: 1.5px;
+}
+
+.cursor-ring i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1.5px;
+  border-left-width: 1.5px;
+}
+
+.cursor-ring i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 1.5px;
+  border-right-width: 1.5px;
+}
+
+.cursor-ring.is-link {
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+}
+
+.cursor-ring.is-label {
+  width: 104px;
+  height: 104px;
+  margin: -52px 0 0 -52px;
+  mix-blend-mode: normal;
+  background: rgba(10, 10, 9, 0.85);
+  border-radius: 50%;
+}
+
+.cursor-ring.is-label i {
+  border-color: var(--paper);
+}
+
+.cursor-ring.is-down {
+  scale: 0.82;
+}
+
+.cursor-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.4s var(--ease);
+  text-align: center;
+  padding: 0 10px;
+}
+
+.cursor-ring.is-label .cursor-label {
+  opacity: 1;
+  transform: none;
+}
+
+/* cursor label: plain text under the focus brackets, no box covering the artwork */
+.cursor-ring.is-label {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  background: none;
+  border-radius: 0;
+}
+
+.cursor-label {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translate(-50%, 6px);
+  padding: 0;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+}
+
+.cursor-ring.is-label .cursor-label {
+  transform: translate(-50%, 0);
+}

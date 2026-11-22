@@ -1,0 +1,261 @@
+/* Design tokens, reset and shared helpers (loaded first). */
+
+:root {
+  --ink: #0a0a09;
+  --ink-2: #141311;
+  --paper: #ede7db;
+  --paper-2: #f6f2ea;
+  --muted: rgba(237, 231, 219, 0.56);
+  --line: rgba(237, 231, 219, 0.14);
+  --red: #ff3d1f;
+  --pencil: #d8321c;
+  --amber: #f0a43a;
+  --lcd: #a8ff7c;
+  --ok: #7dffa8;
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --gut: clamp(18px, 5vw, 80px);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+em {
+  font-style: italic;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+ul,
+ol {
+  margin: 0;
+}
+
+::selection {
+  background: var(--red);
+  color: var(--ink);
+}
+
+/* lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* shared helpers */
+/* reveal mask. Italic glyphs overhang their box (left foot of "A", tail of "g"),
+   so the mask is grown with padding and cancelled with negative margin:
+   same layout and line-wrapping, but nothing gets clipped. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding: 0.04em 0.16em 0.14em;
+  margin: -0.04em -0.16em -0.14em;
+}
+
+.line > span {
+  display: block;
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sec-head .idx {
+  color: var(--red);
+}
+
+.sec-head .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 0 rgba(125, 255, 168, 0.6);
+  animation: ping 2s infinite;
+  vertical-align: middle;
+}
+
+@keyframes ping {
+  70% {
+    box-shadow: 0 0 0 8px rgba(125, 255, 168, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(125, 255, 168, 0);
+  }
+}
+
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 1px dashed var(--red);
+  outline-offset: 4px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 24px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background 0.35s, color 0.35s, border-color 0.35s, transform 0.5s var(--ease);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-solid {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.btn-solid:hover {
+  background: var(--red);
+  color: var(--ink);
+}
+
+.btn-ghost {
+  border: 1px solid rgba(237, 231, 219, 0.28);
+  background: rgba(10, 10, 9, 0.35);
+  color: var(--paper);
+}
+
+.btn-ghost:hover {
+  border-color: var(--paper);
+  background: rgba(237, 231, 219, 0.08);
+}
+
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+}
+
+/* no grey tap flash; no double-tap-zoom delay on controls */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+label,
+input,
+textarea,
+select {
+  touch-action: manipulation;
+}
+
+html {
+  overflow-x: clip;
+  /* modern; body keeps overflow-x:hidden as the fallback */
+}
+
+/* iOS Safari: overflow:hidden on <html> alone does not stop touch-scrolling the page
+   behind a full-screen overlay */
+html.lenis-stopped,
+html.lenis-stopped body {
+  overflow: hidden;
+}
+
+@media (max-width: 360px) {
+  :root {
+    --gut: 16px;
+  }
+}
