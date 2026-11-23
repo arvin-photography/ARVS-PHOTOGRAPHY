@@ -13,7 +13,7 @@ export default function Viewfinder() {
       <div className="vf-stage">
         <div className="vf-frame">
           <img className="vf-photo" src={profile.portrait} alt="" />
-          <img className="vf-blur" src="/images/portrait-blur.webp" alt="" />
+          <img className="vf-blur" src={profile.portraitBlur} alt="" />
           <div className="vf-dim" />
           <div className="vf-vignette" />
           <div className="vf-thirds" />

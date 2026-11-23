@@ -1,0 +1,74 @@
+{
+  "name": "Arvin",
+  "brand": "Arv’s Photography",
+  "brandShort": "Arv’s",
+  "role": "Photographer & Visual Storyteller",
+  "since": 2014,
+  "portrait": "/images/portrait.webp",
+  "portraitCaption": "Frame 001 — Self-portrait, 2026 · 35mm · f/1.8 · 1/250s",
+  "aboutImage": "/images/ridge-shooter.webp",
+  "aboutImageAlt": "Photographer at work on a mountain ridge above the clouds",
+  "lede": "I photograph the quiet seconds between moments — people, places, and the light that ties them together.",
+  "statement": "For twelve years I have chased the same thing: the half-second where light, gesture and place line up and something true slips through the shutter. I work slowly, shoot fast and edit without mercy. Portraits, landscapes, editorial — honest frames, never staged to death.",
+  "email": "hello@arv.studio",
+  "location": "Available worldwide",
+  "availability": "Booking commissions for 2027",
+  "socials": [
+    {
+      "label": "Instagram",
+      "href": "#"
+    },
+    {
+      "label": "Behance",
+      "href": "#"
+    },
+    {
+      "label": "LinkedIn",
+      "href": "#"
+    },
+    {
+      "label": "Vimeo",
+      "href": "#"
+    }
+  ],
+  "stats": [
+    {
+      "value": 12,
+      "suffix": "",
+      "label": "Years behind the lens"
+    },
+    {
+      "value": 41,
+      "suffix": "",
+      "label": "Countries photographed"
+    },
+    {
+      "value": 180,
+      "suffix": "+",
+      "label": "Commissions delivered"
+    },
+    {
+      "value": 9,
+      "suffix": "",
+      "label": "International awards"
+    }
+  ],
+  "kit": [
+    {
+      "label": "Bodies",
+      "detail": "Full-frame mirrorless ×2 · 6×7 medium-format film"
+    },
+    {
+      "label": "Glass",
+      "detail": "24–70 f/2.8 · 35 f/1.4 · 85 f/1.2 · 100–400"
+    },
+    {
+      "label": "Light",
+      "detail": "Two battery strobes, one big octa, a lot of patience"
+    },
+    {
+      "label": "Edit",
+      "detail": "Raw developer, colour-managed monitor, darkroom habits"
+    }
+  ]
+}

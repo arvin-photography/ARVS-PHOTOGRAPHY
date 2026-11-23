@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Portfolio admin</title>
+  </head>
+  <body>
+    <!-- Decap CMS: edits src/content/*.json and uploads photos by committing to GitHub.
+         Each save triggers a Vercel redeploy, so changes are live in about a minute.
+         Settings and fields: config.yml next to this file. -->
+    <script>
+      window.CMS_MANUAL_INIT = true;
+    </script>
+    <script src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
+    <script>
+      // GitHub login goes through this site's own /api/auth + /api/callback (Vercel functions)
+      CMS.init({ config: { backend: { base_url: window.location.origin } } });
+    </script>
+  </body>
+</html>

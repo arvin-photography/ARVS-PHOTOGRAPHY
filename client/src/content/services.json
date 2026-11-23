@@ -1,0 +1,38 @@
+{
+  "services": [
+    {
+      "title": "Portraiture",
+      "desc": "Personal, author and executive portraits — on location or in studio.",
+      "meta": "Half day / full day",
+      "image": "/images/violet.webp"
+    },
+    {
+      "title": "Editorial & Brand",
+      "desc": "Campaigns and stories for magazines, labels and hospitality.",
+      "meta": "Per project",
+      "image": "/images/steel-canyon.webp"
+    },
+    {
+      "title": "Landscape & Travel",
+      "desc": "Commissioned expeditions, tourism boards and fine-art editions.",
+      "meta": "Expedition rate",
+      "image": "/images/moraine.webp"
+    },
+    {
+      "title": "Weddings & Events",
+      "desc": "Documentary coverage for a small number of couples each year.",
+      "meta": "Limited dates",
+      "image": "/images/red-dress.webp"
+    }
+  ],
+  "disciplines": [
+    "Portraits",
+    "Editorial",
+    "Landscapes",
+    "Weddings",
+    "Commercial",
+    "Travel",
+    "Astro",
+    "Fine Art"
+  ]
+}

@@ -10,7 +10,7 @@ export default function DevelopedPrint() {
           <div className="paper" />
           <div className="print-img">
             <img className="dev-photo" src={profile.portrait} alt={`Portrait of ${profile.name}, the photographer`} />
-            <img className="dev-neg" src="/images/portrait-neg.webp" alt="" aria-hidden="true" />
+            <img className="dev-neg" src={profile.portraitNeg} alt="" aria-hidden="true" />
           </div>
           <figcaption className="dev-caption">{profile.portraitCaption}</figcaption>
         </figure>

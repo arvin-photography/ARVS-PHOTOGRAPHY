@@ -13,7 +13,9 @@ Look  →  Focus  →  Capture  →  Develop  →  Work  →  Contact sheet  →
 | UI | React 18 + Vite |
 | 3D | three.js, @react-three/fiber, @react-three/drei (GLB with meshopt/WebP, Lightformer env, contact shadows) |
 | Motion | GSAP 3 + ScrollTrigger (pinning, scrub, containerAnimation), Lenis smooth scroll |
-| Server | Node + Express: `/api/contact` (validation, honeypot, rate limit; saves to `server/data/messages.json`), and serves the production build |
+| Content | JSON files in `client/src/content/`, edited by the owner at **/admin** ([Decap CMS](https://decapcms.org), Git-based: no database) |
+| Hosting | Vercel: static build + functions in `api/` (admin GitHub login, contact form → email via Resend). See **[DEPLOY.md](DEPLOY.md)** |
+| Local server | Node + Express: `/api/contact` (validation, honeypot, rate limit; saves to `server/data/messages.json`), and serves the production build |
 
 ## Run it
 
@@ -33,13 +35,18 @@ npm start             # Express serves the site + API on http://localhost:8787 (
 
 ```
 .
+├── api/                               Vercel functions: auth.js + callback.js (GitHub login for /admin), contact.js
+├── vercel.json                        Vercel build settings
+├── DEPLOY.md                          step-by-step: Vercel, admin login, contact email
 ├── assets/
 │   └── models/dslr_camera.web.glb     original 3D model (source; the site serves the copy in client/public)
 ├── client/                            the website (React + Vite)
 │   ├── index.html
 │   ├── public/                        served as-is
-│   │   ├── images/                    photos (.webp) + thumbs/ (640px) + portrait-blur/-neg (generated)
+│   │   ├── admin/                     the owner's editor (Decap CMS): index.html + config.yml (fields)
+│   │   ├── images/                    photos (.webp) + thumbs/ (640px); uploads/ from /admin; gen/ (generated)
 │   │   └── models/                    3D model used by the site
+│   ├── scripts/prepare.mjs            processes uploads, portrait effects, footer wordmark (+ fonts/)
 │   └── src/
 │       ├── main.jsx                   entry: base styles, smooth scroll, renders <App>
 │       ├── App.jsx                    page layout: sections in scroll order + global overlays
@@ -56,7 +63,8 @@ npm start             # Express serves the site + API on http://localhost:8787 (
 │       │   ├── CameraRig.jsx          scroll-driven camera that reads the shared `rig` state
 │       │   └── mergeStaticMeshes.js   merges static parts into few draw calls
 │       ├── lib/                       shared logic: scroll (Lenis), rig, fx (shutter/flash), sound, support
-│       ├── data/content.js            ALL copy, projects, photos, name & brand
+│       ├── content/*.json             ALL copy, projects, photos, name & brand (edited at /admin)
+│       ├── data/content.js            shapes content/*.json for the components
 │       └── styles/                    base.css (tokens, reset, shared helpers) · effects.css
 ├── server/                            Node + Express
 │   ├── index.js                       entry: starts the server
@@ -66,21 +74,29 @@ npm start             # Express serves the site + API on http://localhost:8787 (
 │   │   ├── routes/contact.js          POST /api/contact (validation + saving)
 │   │   └── middleware/rateLimit.js
 │   └── data/                          messages.json (contact submissions, git-ignored)
-└── tools/images.py                    regenerate thumbnails + portrait effects
+└── tools/images.py                    thumbnails for photos added to client/public/images by hand
 ```
 
 **Styling convention:** each component imports its own stylesheet next to it. `styles/base.css` loads first (from `main.jsx`) and holds design tokens (`--ink`, `--paper`, `--red`, fonts), the reset and shared helpers (`.line`, `.btn`, `.sec-head`, `.sr-only`).
 
 ## Make it yours
 
-- **Text, projects, stats, socials, name & brand** (`name`, `brand`, `brandShort`): `client/src/data/content.js`
-- **Photos:** drop `.webp` files in `client/public/images/` and reference them by name in `content.js`.
-  `portrait.webp` is the photographer shot shown in the viewfinder and on the print (3:2 landscape works best).
-  The current images are Unsplash samples, used as placeholders.
-  Then run **`npm run images`** (needs Python + `pip install pillow`). It rebuilds the 640px thumbnails and the portrait's blurred/negative versions used by the story.
+- **Everything the owner edits** (name, brand, about text, portrait, projects, contact sheet, services, socials) lives in `client/src/content/*.json`.
+  - On the live site, edit it at **`/admin`**. Each Publish commits to GitHub and Vercel redeploys in about a minute. Setup: [DEPLOY.md](DEPLOY.md).
+  - Locally, run `npm run cms` and open http://localhost:5173/admin/index.html. Edits are saved straight to the files.
+  - `client/src/data/content.js` only shapes that data for the components; the fields are defined in `client/public/admin/config.yml`.
+- **Photos uploaded at /admin** go to `client/public/images/uploads/`, at any size, as JPG, PNG or WebP. On every `dev` / `build`, `client/scripts/prepare.mjs` (run by a Vite plugin) does three things:
+  - makes web-sized WebP copies and 640px thumbnails in `images/gen/` and `images/thumbs/gen/`;
+  - regenerates the portrait's blurred and negative versions used by the story;
+  - rebuilds the footer wordmark from the name.
+
+  All of these are git-ignored.
+- The bundled photos in `client/public/images/*.webp` are Unsplash samples, used as placeholders. If you add `.webp` files there by hand, run **`npm run images`** to make their thumbnails (needs Python + `pip install pillow`).
 - **3D model:** `client/public/models/dslr_camera.web.glb` (original kept in `assets/models/`).
   The viewfinder target point is set in `client/src/lib/rig.js` (`VIEWFINDER`).
-- **Contact form:** messages are appended to `server/data/messages.json`. To email them instead, hook up a mail provider in `server/src/routes/contact.js`.
+- **Contact form:**
+  - On Vercel, `api/contact.js` emails each enquiry via Resend (see [DEPLOY.md](DEPLOY.md)).
+  - Locally, the Express server appends to `server/data/messages.json`.
 
 ## Where the magic lives
 

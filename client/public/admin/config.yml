@@ -1,0 +1,138 @@
+# Decap CMS settings for the portfolio admin (https://decapcms.org/docs/configuration-options/)
+# The owner signs in at  https://<your-site>/admin  with a GitHub account that can
+# push to the repository below. Every "Publish" is a commit to `main`, which Vercel
+# picks up and redeploys automatically (about a minute).
+
+backend:
+  name: github
+  repo: DanConrad72/ARVS-PHOTOGRAPHY
+  branch: main
+  auth_endpoint: api/auth # base_url is set to this site's address in index.html
+  commit_messages:
+    create: 'Content: create {{collection}} "{{slug}}"'
+    update: 'Content: update {{collection}} "{{slug}}"'
+    delete: 'Content: delete {{collection}} "{{slug}}"'
+    uploadMedia: 'Content: upload "{{path}}"'
+    deleteMedia: 'Content: delete "{{path}}"'
+
+# On your own computer, `npm run cms` lets /admin edit the files directly (no GitHub login).
+local_backend: true
+
+# Uploaded photos (any size, jpg/png/webp). The build makes web-sized WebP copies automatically.
+media_folder: client/public/images/uploads
+public_folder: /images/uploads
+
+site_url: /
+display_url: /
+
+collections:
+  - name: portfolio
+    label: Portfolio
+    editor:
+      preview: false
+    files:
+      # ─────────────────────────── profile ───────────────────────────
+      - name: profile
+        label: Profile & About
+        file: client/src/content/profile.json
+        fields:
+          - { name: name, label: Your name, widget: string, hint: 'Shown as the big signature in the footer.' }
+          - { name: brand, label: Studio name, widget: string, hint: 'The big title on the opening screen, the menu and the browser tab.' }
+          - { name: brandShort, label: Short studio name, widget: string, hint: 'Used in the menu logo.' }
+          - { name: role, label: Role / tagline, widget: string }
+          - { name: since, label: Shooting since (year), widget: number, value_type: int }
+          - name: portrait
+            label: Your portrait
+            widget: image
+            hint: 'Shown in the camera viewfinder and the developed print at the start. A 3:2 landscape photo works best.'
+          - { name: portraitCaption, label: Portrait caption, widget: string }
+          - { name: aboutImage, label: About section photo, widget: image }
+          - { name: aboutImageAlt, label: About photo description, widget: string, required: false, hint: 'For screen readers: what is in the photo?' }
+          - { name: lede, label: Intro sentence, widget: text }
+          - { name: statement, label: About statement, widget: text }
+          - { name: email, label: Contact email, widget: string }
+          - { name: location, label: Location, widget: string }
+          - { name: availability, label: Availability, widget: string }
+          - name: socials
+            label: Social links
+            widget: list
+            summary: '{{fields.label}}'
+            fields:
+              - { name: label, label: Name, widget: string }
+              - { name: href, label: Link (https://…), widget: string }
+          - name: stats
+            label: Numbers
+            widget: list
+            summary: '{{fields.value}}{{fields.suffix}} {{fields.label}}'
+            fields:
+              - { name: value, label: Number, widget: number, value_type: int }
+              - { name: suffix, label: After the number (e.g. +), widget: string, required: false, default: '' }
+              - { name: label, label: Label, widget: string }
+          - name: kit
+            label: Kit
+            widget: list
+            summary: '{{fields.label}}'
+            fields:
+              - { name: label, label: Category, widget: string }
+              - { name: detail, label: Details, widget: string }
+
+      # ─────────────────────────── projects ───────────────────────────
+      - name: projects
+        label: Selected work (projects)
+        file: client/src/content/projects.json
+        fields:
+          - name: projects
+            label: Projects
+            label_singular: Project
+            widget: list
+            min: 1
+            summary: '{{fields.title}} · {{fields.category}} · {{fields.year}}'
+            hint: 'Drag to reorder. The first project is shown first.'
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: category, label: Category, widget: string, hint: 'e.g. Landscape, Portrait, Urban' }
+              - { name: location, label: Location, widget: string }
+              - { name: year, label: Year, widget: string }
+              - { name: cover, label: Cover photo, widget: image }
+              - { name: blurb, label: Short story, widget: text }
+              - name: gallery
+                label: Series photos
+                label_singular: Photo
+                widget: list
+                min: 1
+                hint: 'Opened when a visitor clicks the project.'
+                field: { name: photo, label: Photo, widget: image }
+
+      # ─────────────────────────── contact sheet ───────────────────────────
+      - name: contact-sheet
+        label: Contact sheet (archive)
+        file: client/src/content/contact-sheet.json
+        fields:
+          - name: frames
+            label: Frames
+            label_singular: Frame
+            widget: list
+            min: 1
+            hint: 'The film contact-sheet grid. Rows of six look best (6, 12, 18, 24…).'
+            field: { name: frame, label: Photo, widget: image }
+
+      # ─────────────────────────── services ───────────────────────────
+      - name: services
+        label: Services
+        file: client/src/content/services.json
+        fields:
+          - name: services
+            label: Services
+            label_singular: Service
+            widget: list
+            summary: '{{fields.title}}'
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: desc, label: Description, widget: text }
+              - { name: meta, label: Pricing note, widget: string, hint: 'e.g. Half day / full day' }
+              - { name: image, label: Photo (shown on hover), widget: image }
+          - name: disciplines
+            label: Disciplines (scrolling ticker)
+            label_singular: Discipline
+            widget: list
+            field: { name: discipline, label: Discipline, widget: string }

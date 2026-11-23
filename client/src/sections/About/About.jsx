@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { img, profile } from '../../data/content';
+import { profile } from '../../data/content';
 import './About.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -106,7 +106,7 @@ export default function About() {
 
         <figure className="loc" data-cursor="On location">
           <div className="loc-mask">
-            <img src={img('ridge-shooter')} alt="Photographer at work on a mountain ridge above the clouds" loading="lazy" decoding="async" />
+            <img src={profile.aboutImage} alt={profile.aboutImageAlt || ''} loading="lazy" decoding="async" />
           </div>
           <figcaption>
             <span>On location</span>

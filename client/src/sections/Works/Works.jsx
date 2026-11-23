@@ -8,6 +8,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const pad = (n) => String(n).padStart(2, '0');
 
+// "Six stories." follows however many projects the owner has added at /admin
+const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+const storyCount = (n) => `${WORDS[n] ?? n} ${n === 1 ? 'story' : 'stories'}.`;
+
 export default function Works({ onOpen }) {
   const root = useRef();
   const track = useRef();
@@ -174,7 +178,7 @@ export default function Works({ onOpen }) {
           ))}
           <div className="works-end">
             <p>
-              Six stories.
+              {storyCount(projects.length)}
               <br />
               <em>Thousands of frames</em>
               <br />

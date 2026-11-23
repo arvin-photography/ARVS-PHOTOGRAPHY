@@ -14,3 +14,10 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 __pycache__/
+
+# generated at build time from uploads + profile (client/scripts/prepare.mjs)
+client/public/images/gen/
+client/public/images/thumbs/gen/
+
+# Vercel CLI
+.vercel
