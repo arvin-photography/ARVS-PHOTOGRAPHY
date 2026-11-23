@@ -565,13 +565,6 @@
   font-weight: 500;
 }
 
-.hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 4px;
-  pointer-events: auto;
-}
 
 /* 3D hotspot on the shutter button */
 /* skip intro */
@@ -613,13 +606,6 @@
     max-width: none;
     gap: 14px;
   }
-  .hero-ctas .btn {
-    flex: 1 1 0;
-    padding: 14px 10px;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-  }
   .seq-skip {
     right: calc(4vw + 18px);
     bottom: calc(4vh + 12px);
@@ -631,7 +617,9 @@
   line-height: 1.5;
 }
 
-/* scroll-down indicator (mouse + label + arrow), centred at the bottom */
+/* scroll badge, centred at the bottom. With no button on the opening screen it is the
+   one call to action: a red button that pulses, an arrow that bobs, and "scroll to
+   explore" slowly turning around it. */
 .scroll-down {
   position: absolute;
   left: 0;
@@ -645,108 +633,105 @@
 
 .scroll-down button {
   pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 12px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  border-radius: 50%;
   color: var(--paper);
 }
 
-.sd-mouse {
+.scroll-down button:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 4px;
+}
+
+.sd-badge {
   position: relative;
-  width: 22px;
-  height: 34px;
-  border: 1.5px solid rgba(237, 231, 219, 0.65);
-  border-radius: 12px;
-  transition: border-color 0.3s;
+  display: grid;
+  place-items: center;
+  width: 118px;
+  height: 118px;
 }
 
-.sd-mouse i {
+.sd-ring {
   position: absolute;
-  left: 50%;
-  top: 7px;
-  width: 3px;
-  height: 7px;
-  margin-left: -1.5px;
-  border-radius: 2px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: var(--paper);
+  font: 500 9.5px var(--mono);
+  letter-spacing: 0.2em;
+  animation: sd-spin 16s linear infinite;
+}
+
+.sd-core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
   background: var(--red);
-  animation: sd-wheel 1.8s var(--ease) infinite;
+  color: #fff;
+  animation: sd-glow 2.2s ease-out infinite;
+  transition: transform 0.4s var(--ease);
 }
 
-/* the wheel drops further and brighter so the "scroll" gesture reads at a glance */
-@keyframes sd-wheel {
-  0% { transform: translateY(0) scaleY(1); opacity: 0; }
-  15% { opacity: 1; }
-  60% { transform: translateY(14px) scaleY(1.5); opacity: 0; }
-  100% { transform: translateY(14px) scaleY(1); opacity: 0; }
+/* thin outer ring, like a lens barrel */
+.sd-core::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 61, 31, 0.45);
 }
 
-/* the whole indicator bobs gently, in time with the wheel and arrow */
-.scroll-down button {
-  animation: sd-float 1.8s ease-in-out infinite;
-}
-
-@keyframes sd-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-
-/* the arrow drops further than the rest and fades, so it keeps "pointing" down */
 .sd-arrow {
-  font-size: 14px;
-  line-height: 1;
-  animation: sd-bob 1.8s ease-in-out infinite;
+  animation: sd-bob 1.6s ease-in-out infinite;
+}
+
+.scroll-down button:hover .sd-core {
+  transform: scale(1.1);
+}
+
+@keyframes sd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sd-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 61, 31, 0.55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 20px rgba(255, 61, 31, 0);
+  }
 }
 
 @keyframes sd-bob {
-  0%, 100% { transform: translateY(-2px); opacity: 0.35; }
-  50% { transform: translateY(8px); opacity: 1; }
-}
-
-/* the label breathes, slightly offset from the bob */
-.sd-label {
-  animation: sd-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes sd-pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
-}
-
-.scroll-down button:hover {
-  animation-play-state: paused;
-}
-
-.scroll-down button:hover .sd-mouse {
-  border-color: var(--paper);
-}
-
-@media (hover: none) {
-  .sd-mouse {
-    display: none;
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(4px);
   }
 }
 
 @media (max-width: 899px) {
-  .hero-intro {
-    bottom: calc(4vh + 84px);
+  .sd-badge {
+    width: 96px;
+    height: 96px;
   }
-  .hero-ctas .btn {
-    flex: 0 0 auto;
-    padding: 14px 22px;
-  }
-  .scroll-down {
-    bottom: calc(2vh + 8px);
+  .sd-core {
+    width: 46px;
+    height: 46px;
   }
 }
 
-/* No reduced-motion opt-out here on purpose: it is a small in-place bob, and Windows
-   "Animation effects: off" (common) would otherwise freeze the only scroll hint. */
+/* No reduced-motion opt-out here on purpose: the motion stays in place (nothing slides
+   across the screen), and Windows "Animation effects: off" (common) would otherwise
+   freeze the opening screen's only call to action. */
 
 .seq {
   background-image:
@@ -844,7 +829,8 @@
   }
   .hero-intro {
     left: max(calc(4vw + 18px), calc(var(--sal) + 16px));
-    bottom: calc(4vh + 84px + var(--sab));
+    /* clear of the 96px scroll badge below it */
+    bottom: calc(3vh + 116px + var(--sab));
   }
   .seq-hud {
     left: max(calc(4vw + 18px), calc(var(--sal) + 16px));
@@ -881,9 +867,13 @@
   .hero-lede br {
     display: none;
   }
-  .scroll-down .sd-label,
-  .scroll-down .sd-mouse {
-    display: none;
+  .sd-badge {
+    width: 78px;
+    height: 78px;
+  }
+  .sd-core {
+    width: 36px;
+    height: 36px;
   }
   .note-1 {
     top: 50%;
@@ -929,20 +919,22 @@
     font-size: 22vw;
   }
   .hero-intro {
-    bottom: calc(3vh + 64px + var(--sab));
+    bottom: calc(1.5vh + 98px + var(--sab));
     gap: 10px;
   }
   .hero-lede {
     font-size: 14px;
   }
-  .hero-ctas .btn {
-    padding: 12px 18px;
-  }
   .scroll-down {
     bottom: calc(1.5vh + 4px + var(--sab));
   }
-  .sd-mouse {
-    display: none;
+  .sd-badge {
+    width: 84px;
+    height: 84px;
+  }
+  .sd-core {
+    width: 40px;
+    height: 40px;
   }
 }
 

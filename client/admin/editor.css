@@ -1067,8 +1067,30 @@ img {
   text-transform: uppercase;
 }
 
+.ed-hero-foot {
+  position: relative;
+  margin-top: 2cqw;
+}
+
+/* copy of the site's red scroll badge (not editable, just for orientation) */
+.ed-scroll-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: max(40px, 4.6cqw);
+  height: max(40px, 4.6cqw);
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: max(16px, 1.6cqw);
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 max(7px, 0.7cqw) rgba(255, 61, 31, 0.16);
+}
+
 .ed-hero-lede {
-  margin: 2cqw 0 0;
+  margin: 0;
   font-size: max(13px, 1.15cqw);
   line-height: 1.5;
 }

@@ -53,7 +53,8 @@ const pick = (obj, keys) => Object.fromEntries(keys.map((k) => [k, obj?.[k]]));
 
 // What each sidebar section edits (used for "unpublished changes" dots).
 export const SECTION_SLICES = {
-  opening: (d) => pick(d.profile, ['brand', 'brandShort', 'role', 'portrait', 'portraitCaption', 'name', 'lede']),
+  opening: (d) => pick(d.profile, ['brand', 'brandShort', 'role']),
+  portrait: (d) => pick(d.profile, ['portrait', 'portraitCaption', 'greeting', 'name', 'lede']),
   about: (d) => pick(d.profile, ['statement', 'since', 'stats', 'aboutImage', 'aboutImageAlt', 'kit']),
   work: (d) => d.projects,
   sheet: (d) => d.sheet,
@@ -65,9 +66,9 @@ export const SECTION_SLICES = {
 export function problems(data) {
   const out = [];
   const p = data.profile;
-  if (!p.name?.trim()) out.push({ section: 'opening', msg: 'Your name is empty.' });
+  if (!p.name?.trim()) out.push({ section: 'portrait', msg: 'Your name is empty.' });
   if (!p.brand?.trim()) out.push({ section: 'opening', msg: 'The studio name is empty.' });
-  if (!p.portrait) out.push({ section: 'opening', msg: 'Add your portrait photo.' });
+  if (!p.portrait) out.push({ section: 'portrait', msg: 'Add your portrait photo.' });
   if (!p.aboutImage) out.push({ section: 'about', msg: 'Add the About photo.' });
   const projects = data.projects.projects || [];
   if (!projects.length) out.push({ section: 'work', msg: 'Add at least one project.' });

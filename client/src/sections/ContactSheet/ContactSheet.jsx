@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { sheet } from '../../data/content';
+import { sheet, sheetHeading } from '../../data/content';
 import './ContactSheet.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -106,11 +106,11 @@ export default function ContactSheet({ onOpen }) {
         </div>
         <h2 className="sheet-title">
           <span className="line">
-            <span>The contact</span>
+            <span>{sheetHeading.line1}</span>
           </span>
           <span className="line">
             <span>
-              <em>sheet.</em>
+              <em>{sheetHeading.accent}</em>
             </span>
           </span>
         </h2>

@@ -6,6 +6,7 @@ import { githubBackend, localBackend, signInWithGitHub, storeToken, storedToken 
 import { prepareUpload } from './lib/images';
 import { SECTION_SLICES, getIn, initialState, problems, reducer, setIn, toJson } from './lib/store';
 import Opening from './sections/Opening';
+import Portrait from './sections/Portrait';
 import About from './sections/About';
 import Work from './sections/Work';
 import Sheet from './sections/Sheet';
@@ -13,12 +14,13 @@ import Services from './sections/Services';
 import Contact from './sections/Contact';
 
 const SECTIONS = [
-  { id: 'opening', n: '01', title: 'Opening & portrait', desc: 'Studio name, tagline, your portrait', Comp: Opening, tip: 'The first thing visitors see, and the print of you that develops after the camera “takes the shot”.' },
-  { id: 'about', n: '02', title: 'About', desc: 'Your story, numbers, kit', Comp: About, tip: 'Your statement, the big numbers, the photo and what is in your bag.' },
-  { id: 'work', n: '03', title: 'Selected work', desc: 'Projects and their photos', Comp: Work, tip: 'Each film frame is a project. Its series photos open when a visitor clicks it.' },
-  { id: 'sheet', n: '04', title: 'Contact sheet', desc: 'The archive photo grid', Comp: Sheet, tip: 'A grid of single frames. Drag to reorder, or drop several photos on “Add photos”.' },
-  { id: 'services', n: '05', title: 'Services', desc: 'What you offer', Comp: Services, tip: 'The scrolling words and the list of services, each with a photo shown on hover.' },
-  { id: 'contact', n: '06', title: 'Contact & footer', desc: 'Availability, email, links', Comp: Contact, tip: 'How people reach you. The contact form itself is automatic.' },
+  { id: 'opening', n: '01', title: 'Opening', desc: 'Studio name and tagline', Comp: Opening, tip: 'The first screen visitors see: your studio name over the 3D camera. The red scroll badge invites them to scroll.' },
+  { id: 'portrait', n: '02', title: 'Portrait', desc: 'Your photo, name and intro', Comp: Portrait, tip: 'After the camera “takes the shot”, this print of you develops on screen.' },
+  { id: 'about', n: '03', title: 'About', desc: 'Your story, numbers, kit', Comp: About, tip: 'Your statement, the big numbers, the photo and what is in your bag.' },
+  { id: 'work', n: '04', title: 'Selected work', desc: 'Heading, projects, photos', Comp: Work, tip: 'The heading, then each film frame is a project. Its series photos open when a visitor clicks it.' },
+  { id: 'sheet', n: '05', title: 'Contact sheet', desc: 'Heading and photo grid', Comp: Sheet, tip: 'The heading and a grid of single frames. Drag to reorder, or drop several photos on “Add photos”.' },
+  { id: 'services', n: '06', title: 'Services', desc: 'What you offer', Comp: Services, tip: 'The scrolling words and the list of services, each with a photo shown on hover.' },
+  { id: 'contact', n: '07', title: 'Contact & footer', desc: 'Availability, email, links', Comp: Contact, tip: 'How people reach you. The contact form itself is automatic.' },
 ];
 const KEYS = ['profile', 'projects', 'sheet', 'services'];
 

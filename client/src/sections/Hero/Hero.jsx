@@ -259,7 +259,8 @@ export default function Hero({ introPlay }) {
         )}
       </div>
 
-      {/* hero copy: deliberately minimal (name, camera, one line, one action) */}
+      {/* hero copy: deliberately minimal (name, camera, one line). No button: the one
+          thing a visitor should do here is scroll, so the scroll badge is the call to action. */}
       <div className="hero-ui">
         <div className="hero-intro">
           <p className="hero-lede hero-reveal">
@@ -267,20 +268,29 @@ export default function Hero({ introPlay }) {
             <br />
             Portraits, landscapes &amp; editorial work.
           </p>
-          <div className="hero-ctas hero-reveal">
-            <a className="btn btn-solid" href="#work" onClick={(e) => { e.preventDefault(); scrollToTarget('#work', { duration: 2.4 }); }}>
-              View the work
-            </a>
-          </div>
         </div>
       </div>
 
-      {/* scroll indicator */}
+      {/* scroll badge: rotating "scroll to explore" ring around a pulsing red button */}
       <div className="scroll-down hero-reveal">
-        <button onClick={() => scrollToTarget(window.scrollY + window.innerHeight * 1.5, { duration: 1.6 })} aria-label="Scroll down">
-          <span className="sd-mouse" aria-hidden="true"><i /></span>
-          <span className="sd-label">Scroll down</span>
-          <span className="sd-arrow" aria-hidden="true">↓</span>
+        <button onClick={() => scrollToTarget(window.scrollY + window.innerHeight * 1.5, { duration: 1.6 })} aria-label="Scroll down to explore">
+          <span className="sd-badge" aria-hidden="true">
+            <svg className="sd-ring" viewBox="0 0 120 120">
+              <defs>
+                <path id="sd-circle" d="M60 60m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0" />
+              </defs>
+              <text>
+                <textPath href="#sd-circle" textLength="292" lengthAdjust="spacing">
+                  SCROLL TO EXPLORE · SCROLL TO EXPLORE ·
+                </textPath>
+              </text>
+            </svg>
+            <span className="sd-core">
+              <svg className="sd-arrow" viewBox="0 0 24 24" width="22" height="22">
+                <path d="M12 4v15M5.5 12.5 12 19l6.5-6.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </span>
         </button>
       </div>
 

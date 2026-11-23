@@ -24,6 +24,7 @@ const slug = (s) =>
     .replace(/^-|-$/g, '');
 
 export const profile = {
+  greeting: 'Hi, I’m',
   ...profileData,
   portrait: web(profileData.portrait),
   // blurred + negative versions for the viewfinder / "develop" effect, generated at build
@@ -40,6 +41,10 @@ export const projects = (projectsData.projects || []).map((p, i) => {
   const gallery = (p.gallery || []).map(web);
   return { ...p, id: `${i}-${slug(p.title)}`, year: String(p.year ?? ''), cover, gallery: gallery.length ? gallery : [cover] };
 });
+
+// Section headings (editable at /admin). `accent` is the red italic part.
+export const worksHeading = { line1: 'Stories told', start: 'in', accent: '1/250th', end: 'of a second', ...projectsData.heading };
+export const sheetHeading = { line1: 'The contact', accent: 'sheet.', ...sheetData.heading };
 
 // The contact sheet: frames numbered from 12, like a roll already partly shot.
 export const sheet = (sheetData.frames || []).map((src, i) => ({

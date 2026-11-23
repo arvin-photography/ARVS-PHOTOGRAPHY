@@ -1,4 +1,10 @@
 {
+  "heading": {
+    "line1": "Stories told",
+    "start": "in",
+    "accent": "1/250th",
+    "end": "of a second"
+  },
   "projects": [
     {
       "title": "Glass Lake",

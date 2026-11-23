@@ -41,6 +41,8 @@ function Series({ base, project, set, update }) {
 export default function Work({ data, set, update }) {
   const projects = data.projects.projects || [];
   const list = ['projects', 'projects'];
+  const heading = { line1: 'Stories told', start: 'in', accent: '1/250th', end: 'of a second', ...data.projects.heading };
+  const setHeading = (key, v) => set(['projects', 'heading'], { ...heading, [key]: v });
 
   const addProject = () =>
     update(list, (a = []) => [
@@ -54,9 +56,13 @@ export default function Work({ data, set, update }) {
         {pad(projects.length)} projects
       </SecHead>
       <h2 className="ed-works-title">
-        Stories told
+        <EditableText value={heading.line1} onChange={(v) => setHeading('line1', v)} label="Heading, line 1" />
         <br />
-        in <em>1/250th</em> of a second
+        <EditableText value={heading.start} onChange={(v) => setHeading('start', v)} label="Line 2, before the red words" optional />{' '}
+        <em>
+          <EditableText value={heading.accent} onChange={(v) => setHeading('accent', v)} label="Red italic words" optional />
+        </em>{' '}
+        <EditableText value={heading.end} onChange={(v) => setHeading('end', v)} label="Line 2, after the red words" optional />
       </h2>
 
       <div className="ed-works-grid">

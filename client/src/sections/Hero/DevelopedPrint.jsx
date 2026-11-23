@@ -17,7 +17,7 @@ export default function DevelopedPrint() {
         <div className="dev-copy">
           <p className="dev-kicker"><Line>( The one behind the lens )</Line></p>
           <h2 className="dev-name">
-            <Line>Hi, I&rsquo;m</Line>
+            <Line>{profile.greeting}</Line>
             <Line><em>{profile.name}.</em></Line>
           </h2>
           <p className="dev-lede">

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { projects } from '../../data/content';
+import { projects, worksHeading } from '../../data/content';
 import './Works.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -134,11 +134,15 @@ export default function Works({ onOpen }) {
           </div>
           <h2 className="works-title">
             <span className="line">
-              <span>Stories told</span>
+              <span>{worksHeading.line1}</span>
             </span>
             <span className="line">
               <span>
-                in <em>1/250th</em> of a second
+                {worksHeading.start}
+                {worksHeading.start && worksHeading.accent ? ' ' : ''}
+                {worksHeading.accent && <em>{worksHeading.accent}</em>}
+                {(worksHeading.start || worksHeading.accent) && worksHeading.end ? ' ' : ''}
+                {worksHeading.end}
               </span>
             </span>
           </h2>

@@ -1,10 +1,12 @@
-import { AddPhotos, EditableImage, ItemTools, SecHead, useDragSort } from '../components/Editable';
+import { AddPhotos, EditableImage, EditableText, ItemTools, SecHead, useDragSort } from '../components/Editable';
 import { moveItem, removeItem } from '../lib/store';
 
 export default function Sheet({ data, set, update }) {
   const frames = data.sheet.frames || [];
   const path = ['sheet', 'frames'];
   const drag = useDragSort((from, to) => update(path, (a) => moveItem(a, from, to)));
+  const heading = { line1: 'The contact', accent: 'sheet.', ...data.sheet.heading };
+  const setHeading = (key, v) => set(['sheet', 'heading'], { ...heading, [key]: v });
 
   return (
     <div className="ed-site ed-sheet">
@@ -12,7 +14,10 @@ export default function Sheet({ data, set, update }) {
         Roll 07 · {frames.length} frames
       </SecHead>
       <h2 className="ed-sheet-title">
-        The contact <em>sheet.</em>
+        <EditableText value={heading.line1} onChange={(v) => setHeading('line1', v)} label="Heading, line 1" />
+        <em>
+          <EditableText value={heading.accent} onChange={(v) => setHeading('accent', v)} label="Heading, red italic line" />
+        </em>
       </h2>
       <div className="ed-sheet-paper">
         <div className="ed-sheet-grid">
