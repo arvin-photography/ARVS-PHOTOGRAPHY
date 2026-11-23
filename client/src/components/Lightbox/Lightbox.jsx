@@ -1,19 +1,39 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { getLenis } from '../../lib/scroll';
 import { thumb } from '../../data/content';
 import './Lightbox.css';
 
+// Full-size photos are fetched + decoded ahead of time, so moving to the next one swaps
+// instantly instead of animating an empty frame while it downloads.
+const ready = new Map();
+function preload(src) {
+  if (!src) return Promise.resolve();
+  if (!ready.has(src)) {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = src;
+    const decoded = img.decode ? img.decode().catch(() => {}) : new Promise((r) => (img.onload = img.onerror = r));
+    // never wait forever on a slow connection: show it anyway after 2.5s
+    ready.set(src, Promise.race([decoded, new Promise((r) => setTimeout(r, 2500))]));
+  }
+  return ready.get(src);
+}
+
 export default function Lightbox({ data, onClose }) {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(data?.index ?? 0); // selected (counter + thumbnails react at once)
+  const [shown, setShown] = useState(data?.index ?? 0); // the photo on screen (once it is ready)
   const root = useRef();
   const imgRef = useRef();
   const closing = useRef(false);
+  const request = useRef(0);
+  const dir = useRef(0);
 
   useEffect(() => {
     if (!data) return;
     closing.current = false;
     setIndex(data.index ?? 0);
+    setShown(data.index ?? 0);
     getLenis()?.stop();
     gsap.fromTo(root.current, { clipPath: 'inset(50% 0% 50% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'expo.inOut' });
     gsap.fromTo(imgRef.current, { scale: 1.15, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, delay: 0.3, ease: 'expo.out' });
@@ -27,18 +47,34 @@ export default function Lightbox({ data, onClose }) {
   }, [onClose]);
 
   const go = useCallback(
-    (next, dir) => {
+    (next, direction) => {
       if (!data) return;
       const n = data.images.length;
-      gsap.fromTo(
-        imgRef.current,
-        { autoAlpha: 0, x: dir * 50, filter: 'blur(10px)' },
-        { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out' }
-      );
-      setIndex(((next % n) + n) % n);
+      const target = ((next % n) + n) % n;
+      const token = ++request.current;
+      setIndex(target);
+      preload(data.images[target]).then(() => {
+        if (token !== request.current) return; // a newer click won
+        dir.current = direction;
+        setShown(target);
+      });
     },
     [data]
   );
+
+  // slide the new photo in as soon as it is on screen (it is already decoded)
+  useLayoutEffect(() => {
+    if (!dir.current || !imgRef.current) return;
+    gsap.fromTo(imgRef.current, { autoAlpha: 0, x: dir.current * 40 }, { autoAlpha: 1, x: 0, scale: 1, duration: 0.4, ease: 'power3.out', overwrite: true });
+    dir.current = 0;
+  }, [shown]);
+
+  // warm up the neighbours so the next swipe is instant too
+  useEffect(() => {
+    if (!data) return;
+    const n = data.images.length;
+    [1, -1, 2].forEach((d) => preload(data.images[(((shown + d) % n) + n) % n]));
+  }, [data, shown]);
 
   useEffect(() => {
     if (!data) return;
@@ -81,8 +117,8 @@ export default function Lightbox({ data, onClose }) {
       <div className="lb-stage" onClick={close} data-cursor="Close" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <img
           ref={imgRef}
-          src={data.images[index]}
-          alt={`${data.title}, image ${index + 1}`}
+          src={data.images[shown]}
+          alt={`${data.title}, image ${shown + 1}`}
           onClick={(e) => {
             e.stopPropagation();
             if (n > 1) go(index + 1, 1);

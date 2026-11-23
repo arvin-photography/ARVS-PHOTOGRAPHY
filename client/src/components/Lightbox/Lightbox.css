@@ -38,13 +38,21 @@
   color: var(--red);
 }
 
+/* The stage fills the space between the title bar and the thumbnails. It is a flex box
+   (not an auto-sized grid row) so the photo's max-height: 100% has a real height to
+   measure against: tall portraits shrink to fit instead of running under the thumbnails. */
 .lb-stage {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 0;
+  overflow: hidden;
 }
 
 .lb-stage img {
+  display: block;
+  width: auto;
+  height: auto;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
