@@ -4,6 +4,7 @@
   "installCommand": "npm install --prefix client",
   "buildCommand": "npm run build --prefix client",
   "outputDirectory": "client/dist",
+  "redirects": [{ "source": "/admin", "destination": "/admin/", "permanent": true }],
   "headers": [
     {
       "source": "/assets/(.*)",
