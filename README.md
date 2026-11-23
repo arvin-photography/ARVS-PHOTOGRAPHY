@@ -13,7 +13,7 @@ Look  →  Focus  →  Capture  →  Develop  →  Work  →  Contact sheet  →
 | UI | React 18 + Vite |
 | 3D | three.js, @react-three/fiber, @react-three/drei (GLB with meshopt/WebP, Lightformer env, contact shadows) |
 | Motion | GSAP 3 + ScrollTrigger (pinning, scrub, containerAnimation), Lenis smooth scroll |
-| Content | JSON files in `client/src/content/`, edited by the owner at **/admin** ([Decap CMS](https://decapcms.org), Git-based: no database) |
+| Content | JSON files in `client/src/content/`, edited by the owner in a visual editor at **/admin** (saves to GitHub: no database) |
 | Hosting | Vercel: static build + functions in `api/` (admin GitHub login, contact form → email via Resend). See **[DEPLOY.md](DEPLOY.md)** |
 | Local server | Node + Express: `/api/contact` (validation, honeypot, rate limit; saves to `server/data/messages.json`), and serves the production build |
 
@@ -41,9 +41,9 @@ npm start             # Express serves the site + API on http://localhost:8787 (
 ├── assets/
 │   └── models/dslr_camera.web.glb     original 3D model (source; the site serves the copy in client/public)
 ├── client/                            the website (React + Vite)
+│   ├── admin/                         the owner's visual editor at /admin (second Vite page)
 │   ├── index.html
 │   ├── public/                        served as-is
-│   │   ├── admin/                     the owner's editor (Decap CMS): index.html + config.yml (fields)
 │   │   ├── images/                    photos (.webp) + thumbs/ (640px); uploads/ from /admin; gen/ (generated)
 │   │   └── models/                    3D model used by the site
 │   ├── scripts/prepare.mjs            processes uploads, portrait effects, footer wordmark (+ fonts/)
@@ -83,8 +83,9 @@ npm start             # Express serves the site + API on http://localhost:8787 (
 
 - **Everything the owner edits** (name, brand, about text, portrait, projects, contact sheet, services, socials) lives in `client/src/content/*.json`.
   - On the live site, edit it at **`/admin`**. Each Publish commits to GitHub and Vercel redeploys in about a minute. Setup: [DEPLOY.md](DEPLOY.md).
-  - Locally, run `npm run cms` and open http://localhost:5173/admin/index.html. Edits are saved straight to the files.
-  - `client/src/data/content.js` only shapes that data for the components; the fields are defined in `client/public/admin/config.yml`.
+  - Locally, run `npm run dev` and open http://localhost:5173/admin/. Save writes straight to the files.
+  - `client/src/data/content.js` only shapes that data for the components.
+  - The editor itself is `client/admin/` (React, a second Vite page): `sections/` holds one look-alike canvas per site section, `lib/backend.js` loads and publishes (GitHub API, one commit per Publish), and `client/scripts/editor-api.mjs` handles saving when it runs locally.
 - **Photos uploaded at /admin** go to `client/public/images/uploads/`, at any size, as JPG, PNG or WebP. On every `dev` / `build`, `client/scripts/prepare.mjs` (run by a Vite plugin) does three things:
   - makes web-sized WebP copies and 640px thumbnails in `images/gen/` and `images/thumbs/gen/`;
   - regenerates the portrait's blurred and negative versions used by the story;

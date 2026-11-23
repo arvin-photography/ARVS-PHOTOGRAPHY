@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 //  All portfolio copy + imagery comes from the JSON files in
-//  src/content/. The owner edits them at /admin (Decap CMS); this
+//  src/content/. The owner edits them at /admin (client/admin); this
 //  file only shapes that data for the components.
 // ─────────────────────────────────────────────────────────────
 import profileData from '../content/profile.json';

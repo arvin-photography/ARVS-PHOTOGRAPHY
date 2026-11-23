@@ -12,3 +12,6 @@ window.scrollTo(0, 0);
 initLenis().stop();
 
 createRoot(document.getElementById('root')).render(<App />);
+
+// dev only: reload when content saved from the editor (/admin) has been processed
+if (import.meta.hot) import.meta.hot.on('content-prepared', () => window.location.reload());

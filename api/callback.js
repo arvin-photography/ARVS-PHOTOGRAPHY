@@ -1,7 +1,7 @@
 // Vercel function: GET /api/callback
-// Step 2 of the /admin (Decap CMS) GitHub login: GitHub sends the owner back here with a
+// Step 2 of the /admin editor's GitHub login: GitHub sends the owner back here with a
 // one-time code; we swap it for an access token and hand it to the admin window that
-// opened this popup (Decap's "authorization:github:…" postMessage handshake).
+// opened this popup ("authorization:github:…" postMessage handshake, see client/admin/lib/backend.js).
 
 const readCookie = (req, name) => {
   const m = (req.headers.cookie || '').match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
@@ -23,7 +23,7 @@ function reply(res, origin, status, payload) {
   var origin = ${js(origin)};
   var message = ${js(message)};
   if (!window.opener) return;
-  // Decap answers "authorizing:github" from the admin page; only then send the token,
+  // the editor answers "authorizing:github"; only then send the token,
   // and only to this site's own origin.
   window.addEventListener('message', function (e) {
     if (e.origin !== origin) return;

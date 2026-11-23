@@ -15,7 +15,7 @@ Each step is done once. Allow about 30 minutes.
 
 ```powershell
 git add -A
-git commit -m "Add owner admin (Decap CMS) and Vercel setup"
+git commit -m "Add owner admin and Vercel setup"
 git push
 ```
 
@@ -82,27 +82,40 @@ If you've verified your own domain in Resend, you can also set `CONTACT_FROM_EMA
 
 ## 5. Try it
 
-1. Open `https://YOUR-SITE/admin`, click **Login with GitHub** and approve.
-2. Open **Portfolio → Profile & About**, change something small, then click **Publish → Publish now**.
+1. Open `https://YOUR-SITE/admin`, click **Sign in with GitHub** and approve.
+2. Click any text on the page, change something small, then click **Publish** at the top right.
 3. Watch **Vercel → Deployments**: a new build starts by itself. After about 1–2 minutes, refresh the site and the change is there.
 4. Send yourself a test message through the contact form.
 
 ---
 
-## Using the admin (for the owner)
+## Using the editor (for the owner)
 
-| In /admin | What it changes on the site |
+`/admin` shows each part of the website as it looks to visitors. Pick a part in the left menu (on a phone, the row of tabs at the top), then edit it right there:
+
+| To… | Do this |
 | --- | --- |
-| **Profile & About** | Name (footer signature), studio name (big title, menu, browser tab), portrait in the camera intro, about text, numbers, kit, email, socials |
-| **Selected work** | The film-strip projects: cover, story, and the photos shown when a project is opened. Drag to reorder. |
-| **Contact sheet** | The archive grid. Rows of six look best. |
-| **Services** | Services with their hover photos, and the scrolling list of disciplines |
+| Change text | Click it and type. A purple label shows what you're editing. Press Enter (or click elsewhere) to finish, or Esc to cancel. |
+| Change a photo | Hover it and click **Replace**, or drag a photo from your computer onto it. |
+| Add photos | Click a dashed **Add** tile and pick one or more, or drop photos onto it. |
+| Move or delete something | Use the small buttons that appear on it (← → / ↑ ↓ and the bin). In photo grids you can also drag photos to reorder them. |
+| Fix a mistake | **Undo** / **Redo** at the top (or Ctrl+Z / Ctrl+Shift+Z). **Discard** throws away everything you haven't published. |
+| Make it live | **Publish** (top right). The site updates in about a minute. |
 
-- **Photos:**
-  - Upload straight from the camera or phone (JPG, PNG or WebP). Each build makes web-sized copies and thumbnails automatically.
-  - Keep each file under about **20 MB**. Originals are stored in the GitHub repository.
+| Section | What it changes on the site |
+| --- | --- |
+| **Opening & portrait** | Studio name (big title, menu, browser tab), tagline, your portrait, its caption, your name and intro |
+| **About** | Statement, the big numbers, the About photo, "In the bag" |
+| **Selected work** | The film-strip projects: cover, title, details, story, and the series photos shown when a project is opened. **Use as cover** picks the cover from the series. |
+| **Contact sheet** | The archive grid. Rows of six look best (6, 12, 18, 24…). |
+| **Services** | The scrolling words, and each service with its hover photo |
+| **Contact & footer** | Availability, email, social links, and your name (drawn as the signature) |
+
+- **Keeping track:** a dot next to a section in the menu means it has unpublished changes, and the top bar says how many. Leaving the page with unpublished changes asks you first.
+- **Photos:** upload straight from the camera or phone (JPG, PNG or WebP). The editor shrinks big photos (max 3000px) before uploading, and each build makes web-sized copies and thumbnails.
 - **Portrait:** a 3:2 landscape photo works best. The blurred and negative versions used in the intro are made automatically.
 - **Changes aren't instant:** a change is live after Vercel finishes rebuilding, which you can see under **Vercel → Deployments**.
+- **If Publish says the site was changed somewhere else:** another device or tab published in the meantime. Choose **Load the latest version** (drops your unpublished edits) or **Publish mine anyway**.
 - **Mistakes:** every Publish is a commit, so earlier versions can be restored from the repository's history on GitHub.
 
 ## Optional: your own domain
@@ -115,10 +128,10 @@ If you've verified your own domain in Resend, you can also set `CONTACT_FROM_EMA
 
 ```powershell
 npm run install:all   # once
-npm run cms           # site + API + local admin server
+npm run dev           # site + API
 ```
 
-Open **http://localhost:5173/admin/index.html**. Edits are saved straight to the files on your computer. Commit and push them yourself when you're happy.
+Open **http://localhost:5173/admin/**. It works the same as online, but **Save** writes straight to the files on your computer and doesn't need a GitHub login. Commit and push them yourself when you're happy.
 
 ## Troubleshooting
 
@@ -126,6 +139,7 @@ Open **http://localhost:5173/admin/index.html**. Edits are saved straight to the
 | --- | --- |
 | /admin login says "GitHub login is not set up yet" | Step 3.4: the env vars are missing, or you didn't redeploy. |
 | GitHub says "redirect_uri is not associated with this application" | The OAuth App's callback URL must be exactly `https://YOUR-SITE/api/callback`, using the address you're actually opening. |
-| Admin says "Failed to persist entry" / "not found" | The signed-in GitHub account doesn't have write access to the repository (step 3, "Who can edit"). |
+| Editor says the GitHub account "can't edit this website" | The signed-in account doesn't have write access to the repository (step 3, "Who can edit"). Click your picture at the top right to sign out, then sign in with the owner's account. |
+| "Your browser blocked the sign-in window" | Allow pop-ups for the site (icon at the right of the address bar), then click Sign in again. |
 | Contact form says "The form is not connected yet" | Step 4: `RESEND_API_KEY` / `CONTACT_TO_EMAIL` are missing, or you didn't redeploy. |
 | A new photo doesn't show | Wait for the Vercel deployment to finish. If the build failed, open it in Vercel → Deployments to see why (e.g. an unreadable file). |

@@ -8,12 +8,10 @@
     "dev": "concurrently -n client,server -c magenta,cyan \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
     "build": "npm run build --prefix client",
     "start": "npm start --prefix server",
-    "images": "python tools/images.py thumbs",
-    "cms": "concurrently -n client,server,cms -c magenta,cyan,yellow \"npm run dev --prefix client\" \"npm run dev --prefix server\" \"decap-server\""
+    "images": "python tools/images.py thumbs"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0",
-    "decap-server": "^3.11.6"
+    "concurrently": "^9.1.0"
   },
   "engines": {
     "node": ">=18"

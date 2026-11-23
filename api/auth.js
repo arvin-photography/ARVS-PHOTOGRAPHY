@@ -1,5 +1,5 @@
 // Vercel function: GET /api/auth
-// Step 1 of the /admin (Decap CMS) GitHub login: sends the owner to GitHub to approve.
+// Step 1 of the /admin editor's GitHub login: sends the owner to GitHub to approve.
 // Needs the env vars OAUTH_GITHUB_CLIENT_ID + OAUTH_GITHUB_CLIENT_SECRET (see DEPLOY.md).
 const crypto = require('node:crypto');
 
