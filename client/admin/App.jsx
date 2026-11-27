@@ -19,7 +19,7 @@ const SECTIONS = [
   { id: 'portrait', n: '02', title: 'Portrait', desc: 'Your photo, name and intro', Comp: Portrait, tip: 'After the camera “takes the shot”, this print of you develops on screen.' },
   { id: 'about', n: '03', title: 'About', desc: 'Your story, numbers, kit', Comp: About, tip: 'Your statement, the big numbers, the photo and what is in your bag.' },
   { id: 'work', n: '04', title: 'Selected work', desc: 'Heading, projects, photos', Comp: Work, tip: 'The heading, then each film frame is a project. Its series photos open when a visitor clicks it.' },
-  { id: 'films', n: '05', title: 'Films', desc: 'Videos (OneDrive links)', Comp: Films, tip: 'Each card looks like a video player on the site. Paste the OneDrive share link and add a poster; clicking the player opens the video.' },
+  { id: 'films', n: '05', title: 'Films', desc: 'Videos (YouTube links)', Comp: Films, tip: 'Each card looks like a video player on the site. Paste a YouTube link and the video plays right on your site.' },
   { id: 'sheet', n: '06', title: 'Contact sheet', desc: 'Heading and photo grid', Comp: Sheet, tip: 'The heading and a grid of single frames. Drag to reorder, or drop several photos on “Add photos”.' },
   { id: 'services', n: '07', title: 'Services', desc: 'What you offer', Comp: Services, tip: 'The scrolling words and the list of services, each with a photo shown on hover.' },
   { id: 'contact', n: '08', title: 'Contact & footer', desc: 'Availability, email, links', Comp: Contact, tip: 'How people reach you. The contact form itself is automatic.' },

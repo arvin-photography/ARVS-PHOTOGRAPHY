@@ -2110,3 +2110,25 @@ img {
     grid-template-columns: 1fr;
   }
 }
+
+.ed-reel-auto {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(10, 10, 9, 0.72);
+  font-size: 11px;
+  color: var(--paper);
+  pointer-events: none;
+}
+
+.ed-reel-mode {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: #ffd29a;
+}
+
+.ed-reel-mode.is-on {
+  color: var(--ok);
+}

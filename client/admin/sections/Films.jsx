@@ -5,6 +5,13 @@ import { moveItem, removeItem } from '../lib/store';
 // "onedrive.live.com/…" → "https://onedrive.live.com/…"
 const normalizeLink = (v) => (!v || /^https?:\/\//i.test(v) ? v : `https://${v}`);
 
+// same rules as the site (client/src/data/content.js)
+const youtubeId = (link = '') => {
+  const m = link.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/|v\/)|youtu\.be\/)([\w-]{11})/i);
+  return m ? m[1] : '';
+};
+const playsOnSite = (link = '') => Boolean(youtubeId(link)) || /vimeo\.com\/(?:video\/)?\d+/i.test(link);
+
 const sourceOf = (link) => {
   if (!link) return '';
   if (/onedrive|1drv\.ms|sharepoint\.com/i.test(link)) return 'OneDrive';
@@ -47,7 +54,7 @@ export default function Films({ data, set, update }) {
       <div className="ed-films-help">
         <Icon name="info" size={16} />
         <span>
-          <b>How to get a video link:</b> in OneDrive, right-click the video → <b>Share</b> → set it to <b>“Anyone with the link can view”</b> → <b>Copy link</b>, then paste it under the video below. YouTube and Vimeo links work too. Visitors see a player; clicking it opens the video.
+          <b>Best: YouTube.</b> Upload the video to YouTube and set Visibility to <b>Unlisted</b> (it won't appear in search). Then press <b>Share → Copy</b> and paste the link under the video below. It then <b>plays right on your site</b>, and its YouTube thumbnail is used as the poster unless you upload your own. Vimeo links also play on the site (add a poster). A OneDrive share link (“Anyone with the link can view”) works too, but opens OneDrive in a new tab.
         </span>
       </div>
 
@@ -56,6 +63,8 @@ export default function Films({ data, set, update }) {
           const base = [...list, i];
           const f = (key) => ({ value: v[key], onChange: (val) => set([...base, key], val) });
           const src = sourceOf(v.link);
+          const yt = youtubeId(v.link);
+          const thumb = !v.poster && yt ? `https://i.ytimg.com/vi/${yt}/hqdefault.jpg` : '';
           return (
             <article className={`ed-reel ed-item${i === 0 ? ' is-feature' : ''}`} key={i}>
               <ItemTools
@@ -67,7 +76,8 @@ export default function Films({ data, set, update }) {
                 confirmText={`Delete the video “${v.title}”? (You can still Undo before publishing.)`}
               />
               <div className="ed-reel-screen">
-                <EditableImage path={v.poster} onChange={(val) => set([...base, 'poster'], val)} label="poster (a still from the video)" ratio={i === 0 ? '21 / 9' : '16 / 9'} large={i === 0} />
+                <EditableImage path={v.poster || thumb} onChange={(val) => set([...base, 'poster'], val)} onRemove={v.poster && yt ? () => set([...base, 'poster'], '') : undefined} label="poster (a still from the video)" ratio={i === 0 ? '21 / 9' : '16 / 9'} large={i === 0} />
+                {thumb && <span className="ed-reel-auto">Using the YouTube thumbnail · Replace to use your own</span>}
                 <span className="ed-reel-play" aria-hidden="true">
                   ▶
                 </span>
@@ -89,14 +99,17 @@ export default function Films({ data, set, update }) {
                 <EditableText
                   value={v.link}
                   onChange={(val) => set([...base, 'link'], val)}
-                  label="Video link (OneDrive share link)"
-                  placeholder="Paste the OneDrive share link here"
+                  label="Video link (YouTube, Vimeo or OneDrive)"
+                  placeholder="Paste the YouTube link here"
                   normalize={normalizeLink}
                 />
                 {v.link ? (
                   <a href={v.link} target="_blank" rel="noopener noreferrer" className="ed-chip-btn" title="Open the link to check it plays">
                     Test {src} link <Icon name="external" size={13} />
                   </a>
+                ) : null}
+                {v.link ? (
+                  <span className={`ed-reel-mode${playsOnSite(v.link) ? ' is-on' : ''}`}>{playsOnSite(v.link) ? '▶ Plays on your site' : '↗ Opens in a new tab'}</span>
                 ) : (
                   <span className="ed-reel-soon">Shows “Coming soon” until a link is added</span>
                 )}
@@ -111,7 +124,7 @@ export default function Films({ data, set, update }) {
         >
           <Icon name="plus" size={26} />
           <span>Add a video</span>
-          <small>Then paste its OneDrive link and add a poster</small>
+          <small>Then paste its YouTube link</small>
         </button>
       </div>
     </div>

@@ -47,8 +47,18 @@
 .reel {
   display: grid;
   gap: 18px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
   color: inherit;
   text-decoration: none;
+}
+
+.reel.is-live {
+  cursor: pointer;
 }
 
 /* — the "player" — */
@@ -187,28 +197,28 @@
 
 /* hover: the poster leans in, the button turns red, the playhead starts to roll */
 @media (hover: hover) {
-  a.reel:hover .reel-poster {
+  .reel.is-live:hover .reel-poster {
     transform: scale(1.04);
     filter: saturate(1) brightness(0.95);
   }
-  a.reel:hover .reel-play {
+  .reel.is-live:hover .reel-play {
     background: var(--red);
     border-color: var(--red);
     transform: translate(-50%, -50%) scale(1.08);
   }
-  a.reel:hover .reel-track i {
+  .reel.is-live:hover .reel-track i {
     width: 22%;
   }
-  a.reel:hover .reel-track i::after {
+  .reel.is-live:hover .reel-track i::after {
     transform: translateY(-50%) scale(1);
   }
 }
 
-a.reel:focus-visible {
+.reel.is-live:focus-visible {
   outline: none;
 }
 
-a.reel:focus-visible .reel-screen {
+.reel.is-live:focus-visible .reel-screen {
   box-shadow: 0 0 0 2px var(--paper), 0 40px 80px -40px rgba(0, 0, 0, 0.9);
 }
 
@@ -281,5 +291,80 @@ a.reel:focus-visible .reel-screen {
   .reel-tag {
     top: 10px;
     right: 10px;
+  }
+}
+
+/* — the cinema viewer (YouTube / Vimeo playing on the site) — */
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 2.5vh;
+  padding: calc(22px + var(--sat, 0px)) max(var(--gut), calc(var(--sar, 0px) + 16px)) calc(4vh + var(--sab, 0px)) max(var(--gut), calc(var(--sal, 0px) + 16px));
+  background: rgba(6, 6, 5, 0.96);
+  overscroll-behavior: contain;
+}
+
+.viewer-top {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.viewer-title {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+}
+
+.viewer-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.viewer-close {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.viewer-close:hover {
+  color: var(--red);
+}
+
+/* the biggest 16:9 box that fits the space, centred */
+.viewer-frame {
+  align-self: center;
+  justify-self: center;
+  width: min(100%, calc((100vh - 140px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #000;
+  box-shadow: 0 0 0 1px var(--line), 0 60px 120px -40px #000;
+}
+
+.viewer-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 899px) {
+  .viewer-top {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+  .viewer-meta {
+    order: 3;
+    flex-basis: 100%;
   }
 }
