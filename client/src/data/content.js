@@ -7,6 +7,7 @@ import profileData from '../content/profile.json';
 import projectsData from '../content/projects.json';
 import sheetData from '../content/contact-sheet.json';
 import servicesData from '../content/services.json';
+import videosData from '../content/videos.json';
 
 const UPLOADS = '/images/uploads/';
 
@@ -45,6 +46,27 @@ export const projects = (projectsData.projects || []).map((p, i) => {
 // Section headings (editable at /admin). `accent` is the red italic part.
 export const worksHeading = { line1: 'Stories told', start: 'in', accent: '1/250th', end: 'of a second', ...projectsData.heading };
 export const sheetHeading = { line1: 'The contact', accent: 'sheet.', ...sheetData.heading };
+
+// Films: video cards that look like a player; clicking opens the owner's OneDrive (or
+// YouTube / Vimeo …) link in a new tab. The section hides itself when the list is empty.
+const videoSource = (link) => {
+  if (!link) return '';
+  if (/onedrive|1drv\.ms|sharepoint\.com/i.test(link)) return 'OneDrive';
+  if (/youtube\.com|youtu\.be/i.test(link)) return 'YouTube';
+  if (/vimeo\.com/i.test(link)) return 'Vimeo';
+  if (/drive\.google\.com/i.test(link)) return 'Google Drive';
+  return 'Watch';
+};
+export const videosSection = {
+  heading: { line1: 'Moving', accent: 'pictures.', ...videosData.heading },
+  intro: videosData.intro ?? '',
+};
+export const videos = (videosData.videos || []).map((v) => ({
+  ...v,
+  poster: v.poster ? web(v.poster) : '',
+  link: (v.link || '').trim(),
+  source: videoSource((v.link || '').trim()),
+}));
 
 // The contact sheet: frames numbered from 12, like a roll already partly shot.
 export const sheet = (sheetData.frames || []).map((src, i) => ({

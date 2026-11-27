@@ -57,6 +57,7 @@ export const SECTION_SLICES = {
   portrait: (d) => pick(d.profile, ['portrait', 'portraitCaption', 'greeting', 'name', 'lede']),
   about: (d) => pick(d.profile, ['statement', 'since', 'stats', 'aboutImage', 'aboutImageAlt', 'kit']),
   work: (d) => d.projects,
+  films: (d) => d.videos,
   sheet: (d) => d.sheet,
   services: (d) => d.services,
   contact: (d) => pick(d.profile, ['availability', 'email', 'socials', 'name']),
@@ -76,6 +77,9 @@ export function problems(data) {
     const name = x.title?.trim() || `Project ${i + 1}`;
     if (!x.title?.trim()) out.push({ section: 'work', msg: `Project ${i + 1} needs a title.` });
     if (!x.cover) out.push({ section: 'work', msg: `“${name}” needs a cover photo.` });
+  });
+  (data.videos?.videos || []).forEach((v, i) => {
+    if (!v.title?.trim()) out.push({ section: 'films', msg: `Video ${i + 1} needs a title.` });
   });
   if (!(data.sheet.frames || []).length) out.push({ section: 'sheet', msg: 'The contact sheet needs at least one photo.' });
   (data.services.services || []).forEach((s, i) => {

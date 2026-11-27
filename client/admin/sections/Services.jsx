@@ -33,7 +33,7 @@ export default function Services({ data, set, update }) {
       </div>
       <p className="ed-note">These words scroll across the page in a big ticker.</p>
 
-      <SecHead n="04" title="Commissions">
+      <SecHead n="05" title="Commissions">
         What I shoot
       </SecHead>
 

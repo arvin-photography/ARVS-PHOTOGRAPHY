@@ -6,6 +6,7 @@ import Nav from './components/Nav/Nav';
 import Hero from './sections/Hero/Hero';
 import About from './sections/About/About';
 import Works from './sections/Works/Works';
+import Films from './sections/Films/Films';
 import ContactSheet from './sections/ContactSheet/ContactSheet';
 import Services from './sections/Services/Services';
 import Contact from './sections/Contact/Contact';
@@ -52,6 +53,7 @@ export default function App() {
         <Hero introPlay={intro} />
         <About />
         <Works onOpen={setLightbox} />
+        <Films />
         <ContactSheet onOpen={setLightbox} />
         <Services />
         <Contact />

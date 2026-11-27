@@ -93,7 +93,7 @@ export default function Contact() {
   return (
     <section className="contact" id="contact" ref={root}>
       <div className="sec-head">
-        <span className="idx">(05)</span>
+        <span className="idx">(06)</span>
         <span>Contact</span>
         <span className="rule" />
         <span className="contact-avail">

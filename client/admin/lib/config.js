@@ -10,6 +10,7 @@ export const FILES = {
   projects: 'client/src/content/projects.json',
   sheet: 'client/src/content/contact-sheet.json',
   services: 'client/src/content/services.json',
+  videos: 'client/src/content/videos.json',
 };
 
 export const UPLOAD_URL = '/images/uploads/'; // how pages refer to uploaded photos

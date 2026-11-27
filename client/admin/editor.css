@@ -1912,3 +1912,201 @@ img {
     padding: 0 14px;
   }
 }
+
+/* — films (video cards that look like a player on the site) — */
+.ed-films-titlerow {
+  display: grid;
+  grid-template-columns: 1fr minmax(200px, 22rem);
+  align-items: end;
+  gap: 3cqw;
+  margin: 2.6cqw 0 3cqw;
+}
+
+.ed-films-title {
+  margin: 0;
+  font: 400 max(40px, 6.4cqw)/0.92 var(--serif);
+}
+
+.ed-films-title em {
+  display: block;
+  color: var(--red);
+}
+
+.ed-films-intro {
+  margin: 0;
+  font-size: max(14px, 1.15cqw);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.ed-films-help {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 3cqw;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--ed-accent-soft);
+  border: 1px solid rgba(143, 125, 255, 0.28);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(237, 231, 219, 0.85);
+}
+
+.ed-films-help .ed-icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ed-accent-text);
+}
+
+.ed-films-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 42px 3cqw;
+  align-items: start;
+}
+
+.ed-reel.is-feature {
+  grid-column: 1 / -1;
+}
+
+.ed-reel-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.ed-reel-screen .ed-photo {
+  border-radius: 10px;
+}
+
+.ed-reel-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(237, 231, 219, 0.14);
+  border: 1px solid rgba(237, 231, 219, 0.5);
+  color: var(--paper);
+  font-size: 20px;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* hovering still reaches the photo's Replace button */
+}
+
+.ed-reel-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 16px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--paper);
+}
+
+.ed-reel-bar .ed-field {
+  pointer-events: auto;
+}
+
+.ed-reel-bar i {
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(237, 231, 219, 0.28);
+  pointer-events: none;
+}
+
+.ed-reel-bar > span:first-child {
+  pointer-events: none;
+}
+
+.ed-reel-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 14px;
+  margin-top: 16px;
+}
+
+.ed-reel-no {
+  grid-row: span 2;
+  padding-top: 0.5em;
+  font: 400 11px/1 var(--mono);
+  color: var(--red);
+}
+
+.ed-reel-info h3 {
+  margin: 0;
+  font: 400 clamp(24px, 2.4cqw, 36px)/1.05 var(--serif);
+}
+
+.ed-reel.is-feature .ed-reel-info h3 {
+  font-size: clamp(28px, 3.4cqw, 48px);
+}
+
+.ed-reel-meta {
+  margin: 8px 0 0;
+  font: 400 10.5px/1.6 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* the link row: what the owner pastes from OneDrive */
+.ed-reel-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(237, 231, 219, 0.03);
+  font: 400 12px/1.4 var(--mono);
+  color: var(--muted);
+}
+
+.ed-reel-link > .ed-field {
+  flex: 1 1 240px;
+  min-width: 0;
+  word-break: break-all;
+  color: var(--paper);
+}
+
+.ed-reel-link.is-missing {
+  border-style: dashed;
+  border-color: rgba(240, 164, 58, 0.55);
+  background: rgba(240, 164, 58, 0.06);
+}
+
+.ed-reel-link .ed-chip-btn {
+  font-family: var(--sans);
+  font-size: 12px;
+  text-decoration: none;
+  color: var(--ed-accent-text);
+}
+
+.ed-reel-soon {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: #ffd29a;
+}
+
+.ed-films-add {
+  min-height: 220px;
+}
+
+@container (max-width: 700px) {
+  .ed-films-titlerow,
+  .ed-films-grid {
+    grid-template-columns: 1fr;
+  }
+}

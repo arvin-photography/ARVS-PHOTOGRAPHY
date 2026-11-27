@@ -10,7 +10,7 @@ export default function Sheet({ data, set, update }) {
 
   return (
     <div className="ed-site ed-sheet">
-      <SecHead n="03" title="The archive" light>
+      <SecHead n="04" title="The archive" light>
         Roll 07 · {frames.length} frames
       </SecHead>
       <h2 className="ed-sheet-title">

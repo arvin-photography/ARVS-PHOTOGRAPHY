@@ -16,6 +16,7 @@ const FILES = {
   projects: 'src/content/projects.json',
   sheet: 'src/content/contact-sheet.json',
   services: 'src/content/services.json',
+  videos: 'src/content/videos.json',
 };
 const SAFE_NAME = /^[a-z0-9][a-z0-9._-]{0,120}\.(jpe?g|png|webp)$/i;
 
@@ -41,7 +42,15 @@ export function editorApi(root) {
     configureServer(server) {
       server.middlewares.use('/__editor/content', (req, res) => {
         try {
-          const data = Object.fromEntries(Object.entries(FILES).map(([k, f]) => [k, JSON.parse(readFileSync(path.join(root, f), 'utf8'))]));
+          const read = (f) => {
+            try {
+              return JSON.parse(readFileSync(path.join(root, f), 'utf8'));
+            } catch (err) {
+              if (err.code === 'ENOENT') return {}; // not created yet: Save creates it
+              throw err;
+            }
+          };
+          const data = Object.fromEntries(Object.entries(FILES).map(([k, f]) => [k, read(f)]));
           send(res, 200, data);
         } catch (err) {
           send(res, 500, { ok: false, error: err.message });

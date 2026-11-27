@@ -108,6 +108,7 @@ If you've verified your own domain in Resend, you can also set `CONTACT_FROM_EMA
 | **Portrait** | Your portrait, its caption, the greeting ("Hi, I'm"), your name and intro |
 | **About** | Statement, the big numbers, the About photo, "In the bag" |
 | **Selected work** | The heading (the red italic words too) and the film-strip projects: cover, title, details, story, and the series photos shown when a project is opened. **Use as cover** picks the cover from the series. |
+| **Films** | Videos shown as player-style cards. Paste each video's OneDrive **Share** link (set to "Anyone with the link can view"), add a poster still, title and duration. Clicking the player opens the video in OneDrive. Videos without a link show "Coming soon"; delete all videos to hide the section. |
 | **Contact sheet** | The heading and the archive grid. Rows of six look best (6, 12, 18, 24…). |
 | **Services** | The scrolling words, and each service with its hover photo |
 | **Contact & footer** | Availability, email, social links, and your name (drawn as the signature) |

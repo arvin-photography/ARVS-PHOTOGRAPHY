@@ -153,9 +153,15 @@ export function githubBackend(token) {
       const shas = {};
       await Promise.all(
         Object.entries(FILES).map(async ([key, path]) => {
-          const f = await call(`${repo}/contents/${encodePath(path)}?ref=${BRANCH}`);
-          data[key] = JSON.parse(base64ToText(f.content));
-          shas[key] = f.sha;
+          try {
+            const f = await call(`${repo}/contents/${encodePath(path)}?ref=${BRANCH}`);
+            data[key] = JSON.parse(base64ToText(f.content));
+            shas[key] = f.sha;
+          } catch (e) {
+            if (e.status !== 404) throw e;
+            data[key] = {}; // file not created yet (e.g. a newer section): Publish creates it
+            shas[key] = null;
+          }
         })
       );
       return { data, shas };
@@ -166,8 +172,13 @@ export function githubBackend(token) {
       const headSha = ref.object.sha;
       if (!force) {
         for (const key of Object.keys(changed)) {
-          const cur = await call(`${repo}/contents/${encodePath(FILES[key])}?ref=${headSha}`);
-          if (cur.sha !== shas[key]) {
+          let current = null;
+          try {
+            current = (await call(`${repo}/contents/${encodePath(FILES[key])}?ref=${headSha}`)).sha;
+          } catch (e) {
+            if (e.status !== 404) throw e;
+          }
+          if (current !== shas[key]) {
             throw new EditorError('This content was changed somewhere else (another device or tab) after you opened the editor.', { code: 'conflict' });
           }
         }

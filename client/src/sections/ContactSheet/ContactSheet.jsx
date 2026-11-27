@@ -97,7 +97,7 @@ export default function ContactSheet({ onOpen }) {
     <section className="sheet" id="archive" ref={root}>
       <div className="sheet-head">
         <div className="sec-head">
-          <span className="idx">(03)</span>
+          <span className="idx">(04)</span>
           <span>The archive</span>
           <span className="rule" />
           <span>

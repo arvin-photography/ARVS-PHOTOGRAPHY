@@ -1,0 +1,285 @@
+/* Films: player-styled cards that open the owner's OneDrive videos. */
+
+.films {
+  position: relative;
+  background: var(--ink);
+  background-image: var(--grain);
+  /* extra bottom room: the contact sheet's rounded top overlaps upward by 48px */
+  padding: 14vh var(--gut) calc(14vh + 48px);
+}
+
+.films-titlerow {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 30rem);
+  align-items: end;
+  gap: 4vh 6vw;
+  margin: 3vh 0 7vh;
+}
+
+.films-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(3rem, 7vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+}
+
+.films-title em {
+  color: var(--red);
+}
+
+.films-intro {
+  color: var(--muted);
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.55;
+}
+
+.films-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7vh 3vw;
+}
+
+.reel.is-feature {
+  grid-column: 1 / -1;
+}
+
+.reel {
+  display: grid;
+  gap: 18px;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* — the "player" — */
+.reel-screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #050505;
+  box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+.reel.is-feature .reel-screen {
+  aspect-ratio: 21 / 9;
+}
+
+.reel-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease), filter 0.6s;
+  filter: saturate(0.92) brightness(0.86);
+}
+
+.reel-poster.is-empty {
+  background: radial-gradient(ellipse at 50% 40%, #2a2420, #0b0b0a 70%);
+}
+
+/* letterbox-style shading so the controls stay readable on any poster */
+.reel-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, transparent 26%, transparent 58%, rgba(0, 0, 0, 0.78) 100%);
+  pointer-events: none;
+}
+
+.reel-tag {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(10, 10, 9, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.reel-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 6vw, 92px);
+  height: clamp(64px, 6vw, 92px);
+  border-radius: 50%;
+  background: rgba(237, 231, 219, 0.14);
+  border: 1px solid rgba(237, 231, 219, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--paper);
+  transform: translate(-50%, -50%);
+  transition: background 0.4s, border-color 0.4s, transform 0.6s var(--ease);
+}
+
+.reel-play svg {
+  width: 38%;
+  height: 38%;
+  margin-left: 6%; /* optical centre of a play triangle */
+}
+
+.reel-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  color: var(--paper);
+}
+
+.reel-time {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.reel-time i {
+  font-style: normal;
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+.reel-track {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(237, 231, 219, 0.28);
+}
+
+.reel-track i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0%;
+  border-radius: inherit;
+  background: var(--red);
+  transition: width 1.6s var(--ease);
+}
+
+/* playhead */
+.reel-track i::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--paper);
+  transform: translateY(-50%) scale(0.6);
+  transition: transform 0.4s var(--ease);
+}
+
+/* hover: the poster leans in, the button turns red, the playhead starts to roll */
+@media (hover: hover) {
+  a.reel:hover .reel-poster {
+    transform: scale(1.04);
+    filter: saturate(1) brightness(0.95);
+  }
+  a.reel:hover .reel-play {
+    background: var(--red);
+    border-color: var(--red);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  a.reel:hover .reel-track i {
+    width: 22%;
+  }
+  a.reel:hover .reel-track i::after {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+a.reel:focus-visible {
+  outline: none;
+}
+
+a.reel:focus-visible .reel-screen {
+  box-shadow: 0 0 0 2px var(--paper), 0 40px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+/* no link yet: still looks like a player, but quieter */
+.reel.is-soon .reel-play {
+  opacity: 0.55;
+}
+
+.reel.is-soon .reel-poster {
+  filter: saturate(0.6) brightness(0.6);
+}
+
+/* — title row under the player — */
+.reel-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 16px;
+  align-items: baseline;
+}
+
+.reel-no {
+  grid-row: span 2;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+}
+
+.reel-info h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 2.4vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.reel.is-feature .reel-info h3 {
+  font-size: clamp(2rem, 3.4vw, 3.6rem);
+}
+
+.reel-info p {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 899px) {
+  .films {
+    padding: 12vh var(--gut) calc(12vh + 48px);
+  }
+  .films-titlerow {
+    grid-template-columns: 1fr;
+    margin-bottom: 5vh;
+  }
+  .films-grid {
+    grid-template-columns: 1fr;
+    gap: 6vh;
+  }
+  .reel.is-feature .reel-screen {
+    aspect-ratio: 16 / 9;
+  }
+  .reel-bar {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .reel-bar > svg:nth-last-child(-n + 2) {
+    display: none; /* volume + fullscreen: too small to read on phones */
+  }
+  .reel-tag {
+    top: 10px;
+    right: 10px;
+  }
+}

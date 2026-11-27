@@ -3,14 +3,16 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { sound } from '../../lib/sound';
 import { getLenis, scrollToTarget } from '../../lib/scroll';
-import { profile } from '../../data/content';
+import { profile, videos } from '../../data/content';
 import './Nav.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// "Films" only when the owner has added videos (the section hides itself otherwise)
 const LINKS = [
   ['About', '#about'],
   ['Work', '#work'],
+  ...(videos.length ? [['Films', '#films']] : []),
   ['Archive', '#archive'],
   ['Contact', '#contact'],
 ];

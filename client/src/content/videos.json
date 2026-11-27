@@ -1,0 +1,30 @@
+{
+  "heading": {
+    "line1": "Moving",
+    "accent": "pictures."
+  },
+  "intro": "Short films, behind-the-scenes and timelapses. Press play — each one opens in OneDrive.",
+  "videos": [
+    {
+      "title": "Glass Lake — the film",
+      "meta": "Landscape · Dolomites · 2025",
+      "duration": "02:48",
+      "poster": "/images/glass-lake.webp",
+      "link": ""
+    },
+    {
+      "title": "Faces of Strangers: behind the scenes",
+      "meta": "Portrait · Twelve cities · 2025",
+      "duration": "04:12",
+      "poster": "/images/noir.webp",
+      "link": ""
+    },
+    {
+      "title": "Night Ridge timelapse",
+      "meta": "Astro · Southern Alps · 2024",
+      "duration": "01:30",
+      "poster": "/images/night-ridge.webp",
+      "link": ""
+    }
+  ]
+}

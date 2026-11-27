@@ -16,7 +16,7 @@ export default function Contact({ data, set, update }) {
 
   return (
     <div className="ed-site ed-contact">
-      <SecHead n="05" title="Contact">
+      <SecHead n="06" title="Contact">
         <span className="ed-avail">
           <i />
           <EditableText value={p.availability} onChange={(v) => set(['profile', 'availability'], v)} label="Availability" />

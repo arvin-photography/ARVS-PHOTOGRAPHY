@@ -154,7 +154,7 @@ export default function Services() {
 
       <div className="svc-wrap">
         <div className="sec-head">
-          <span className="idx">(04)</span>
+          <span className="idx">(05)</span>
           <span>Commissions</span>
           <span className="rule" />
           <span>What I shoot</span>
