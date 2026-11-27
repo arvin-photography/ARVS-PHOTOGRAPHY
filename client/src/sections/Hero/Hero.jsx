@@ -92,7 +92,7 @@ export default function Hero({ introPlay }) {
         Object.assign(rig, {
           theta: 0.62, phi: 0.2, radius: hero.radius,
           tx: MODEL_CENTER[0], ty: MODEL_CENTER[1], tz: MODEL_CENTER[2],
-          fov: 32, shiftY: hero.shiftY,
+          fov: 32, shiftY: hero.shiftY, shiftX: 0,
           idle: 1, ring: 0, focus: 0,
         });
 
@@ -180,6 +180,11 @@ export default function Hero({ introPlay }) {
             shiftY: 0, idle: 0.3, ring: 1.6,
             duration: 3.4, ease: 'power2.inOut',
           }, 0.2)
+          // make room for "Every photograph begins behind the glass": on wide screens the
+          // camera eases to the right while the line is up, then glides back to centre
+          // before the dolly into the eyepiece (which has to aim dead-centre)
+          .to(rig, { shiftX: tall ? 0 : 0.2, duration: 1.2, ease: 'power2.inOut' }, 0.5)
+          .to(rig, { shiftX: 0, duration: 0.75, ease: 'power2.inOut' }, 2.85)
           .fromTo(q('.note-1 .line > span'), { yPercent: 135 }, { yPercent: 0, stagger: 0.08, duration: 0.6, ease: 'power3.out' }, 1.0)
           .to(q('.note-1 .line > span'), { yPercent: -135, stagger: 0.05, duration: 0.5, ease: 'power2.in' }, 2.6)
           .fromTo(q('.seq-hud'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.9)

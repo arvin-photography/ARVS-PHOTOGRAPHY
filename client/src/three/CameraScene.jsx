@@ -60,7 +60,7 @@ export default function CameraScene() {
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.05;
+        gl.toneMappingExposure = 1.15;
       }}
       style={{ touchAction: 'pan-y' }}
     >
@@ -74,21 +74,31 @@ export default function CameraScene() {
       <Driver />
       <CameraRig />
 
-      {/* PERF: one real light; the red/blue rim lights now live in the baked environment
-          (free at runtime) instead of two per-pixel spotlights */}
-      <ambientLight intensity={0.12} />
-      <directionalLight position={[3, 5, 4]} intensity={1.6} color="#fff4e6" />
+      {/* Studio product lighting. Two real lights (warm key, cool fill); everything else
+          (softbox, strip lights, coloured rims) lives in the baked environment, which is
+          free at runtime. PERF: still only two per-pixel lights. */}
+      <ambientLight intensity={0.22} />
+      <directionalLight position={[2.5, 4.5, 4.5]} intensity={2.4} color="#fff1e2" />
+      <directionalLight position={[-4, 2, 2]} intensity={0.55} color="#dbe4ff" />
 
       <Suspense fallback={null}>
         <CameraModel />
         <Shadow />
         <Environment resolution={256} frames={1}>
-          <Lightformer form="rect" intensity={2.6} position={[2.5, 3, 3]} scale={[5, 2, 1]} />
-          <Lightformer form="rect" intensity={1.2} position={[-4, 1.5, 1]} scale={[2, 4, 1]} />
-          <Lightformer form="rect" intensity={5} position={[-3.5, 1.6, -2.8]} scale={[3, 3, 1]} color="#ff4a26" />
-          <Lightformer form="rect" intensity={2.2} position={[3, 1, -3]} scale={[2.5, 2.5, 1]} color="#9fb6ff" />
-          <Lightformer form="circle" intensity={2.5} position={[0, 5, 0]} scale={3} />
-          <Lightformer form="rect" intensity={0.8} position={[0, 0.5, -5]} scale={[8, 1, 1]} color="#b8c6ff" />
+          {/* big overhead softbox: the soft sheen across the top plate and lens barrel */}
+          <Lightformer form="rect" intensity={3.2} position={[0, 4.5, 2]} rotation={[Math.PI / 2.6, 0, 0]} scale={[6, 3, 1]} />
+          {/* white rim from behind and above: outlines the silhouette against the dark page */}
+          <Lightformer form="rect" intensity={2.6} position={[0, 3, -4]} rotation={[Math.PI / 5, Math.PI, 0]} scale={[6, 1.2, 1]} />
+          {/* front key softbox, slightly left: shapes the grip and the lens front */}
+          <Lightformer form="rect" intensity={2.2} position={[2.5, 2.2, 3.5]} scale={[4, 2.5, 1]} />
+          {/* tall white strip lights left and right: the crisp edge highlights of a product shot */}
+          <Lightformer form="rect" intensity={4} position={[-4.2, 1.4, 0.4]} rotation={[0, Math.PI / 2, 0]} scale={[0.5, 4, 1]} />
+          <Lightformer form="rect" intensity={3.2} position={[4.2, 1.4, -0.4]} rotation={[0, -Math.PI / 2, 0]} scale={[0.5, 4, 1]} />
+          {/* brand accents, kept to the rim: a red kicker behind-left, a cool one behind-right */}
+          <Lightformer form="rect" intensity={1.8} position={[-3, 1.5, -3.2]} scale={[2, 2, 1]} color="#ff4a26" />
+          <Lightformer form="rect" intensity={1.4} position={[3, 1.2, -3.2]} scale={[2, 2, 1]} color="#9fb6ff" />
+          {/* faint floor bounce so the underside isn't pure black */}
+          <Lightformer form="rect" intensity={0.5} position={[0, -2, 1]} rotation={[-Math.PI / 2, 0, 0]} scale={[6, 4, 1]} color="#ffe7d2" />
         </Environment>
       </Suspense>
     </Canvas>

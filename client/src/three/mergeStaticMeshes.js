@@ -3,6 +3,8 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 
 // Model parts that animate stay separate meshes; everything else may be merged.
 export const ANIMATED = ['ShutterButton', 'Lens_ZoomRing', 'Lens_FocusRing'];
+// …plus parts that get their own material at runtime (the rear LCD shows a live view)
+const SEPARATE = [...ANIMATED, 'Screen'];
 
 const GETTERS = ['getX', 'getY', 'getZ', 'getW'];
 
@@ -27,7 +29,7 @@ function toModelSpace(src, matrix) {
 
 export function mergeStaticMeshes(root) {
   const animated = new Set();
-  root.traverse((o) => ANIMATED.includes(o.name) && o.traverse((c) => animated.add(c)));
+  root.traverse((o) => SEPARATE.includes(o.name) && o.traverse((c) => animated.add(c)));
   const groups = new Map();
   root.traverse((o) => {
     if (!o.isMesh || animated.has(o) || Array.isArray(o.material)) return;

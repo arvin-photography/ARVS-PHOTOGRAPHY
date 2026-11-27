@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { MODEL_CENTER, rig } from '../lib/rig';
 import { cursorBus, fx, shutter } from '../lib/fx';
 import { ANIMATED, mergeStaticMeshes } from './mergeStaticMeshes';
+import { liveViewMaterial } from './liveView';
 
 export const MODEL_URL = '/models/dslr_camera.web.glb';
 useGLTF.preload(MODEL_URL);
@@ -25,7 +26,7 @@ export default function CameraModel() {
     scene.traverse((o) => {
       if (o.isMesh && o.material) {
         const m = o.material;
-        m.envMapIntensity = 1.15;
+        m.envMapIntensity = 1.3;
         // PERF: a transmissive material makes three.js render the whole scene a second
         // time every frame. Fake the lens glass with a cheap, reflective transparent coat.
         if (m.transmission > 0) {
@@ -47,6 +48,18 @@ export default function CameraModel() {
         n[o.name] = { obj: o, q: o.quaternion.clone(), p: o.position.clone() };
       }
     });
+    // rear LCD: live view of the portrait (useGLTF caches the scene, so only once)
+    const screen = scene.getObjectByName('Screen');
+    if (screen && !screen.userData.liveView) {
+      const mat = liveViewMaterial();
+      screen.traverse((o) => {
+        if (o.isMesh) {
+          o.material.dispose?.();
+          o.material = mat;
+        }
+      });
+      screen.userData.liveView = true;
+    }
     // PERF: nothing else in the model ever moves → skip per-frame matrix recomputation
     scene.traverse((o) => {
       if (o !== scene && !ANIMATED.includes(o.name)) {

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viewfinder Reveal – DSLR camera demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b0c0f; --fg:#f3f1ec; --muted:#8a8f98; --af:#7dff8a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:var(--bg); color:var(--fg); font-family:Inter, system-ui, sans-serif; }
+  /* the scroll track that drives the animation */
+  #track { position:relative; height:520vh; }
+  #stage { position:sticky; top:0; height:100vh; width:100%; overflow:hidden;
+           background:radial-gradient(120% 90% at 50% 35%, #23262d 0%, #121318 55%, #08090b 100%); }
+  #gl { position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  /* hero copy */
+  @media (max-aspect-ratio:1/1) { .copy { top:12vh !important; transform:none !important; } }
+  .copy { position:absolute; left:6vw; top:50%; transform:translateY(-50%); max-width:34rem; pointer-events:none; transition:opacity .2s linear; }
+  .copy small { letter-spacing:.24em; text-transform:uppercase; color:var(--muted); font-size:.75rem; }
+  .copy h1 { font-size:clamp(2.4rem, 5.5vw, 4.8rem); line-height:1; font-weight:800; margin:.6rem 0 1rem; letter-spacing:-.02em; }
+  .copy p { color:#b9bdc5; font-size:1.05rem; line-height:1.55; }
+  .hint { position:absolute; bottom:4vh; left:50%; transform:translateX(-50%); font-size:.75rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); transition:opacity .2s; }
+  .hint::after { content:""; display:block; width:1px; height:34px; margin:10px auto 0; background:linear-gradient(var(--muted), transparent); animation:drip 1.6s ease-in-out infinite; }
+  @keyframes drip { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+  /* ---------- viewfinder overlay ---------- */
+  #vf { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; display:grid; place-items:center; }
+  .vf-window { position:relative; width:min(84vw, 118vh); aspect-ratio:3/2; border-radius:14px; overflow:hidden;
+               box-shadow:0 0 0 2px #111, 0 0 80px 30px #000 inset; transition:all .9s cubic-bezier(.2,.8,.2,1); }
+  .vf-window img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:blur(var(--blur,10px)) brightness(.92); transform:scale(1.03); }
+  .vf-window::after { content:""; position:absolute; inset:0; pointer-events:none;
+                      background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%); transition:opacity .6s; }
+  .vf-chrome { position:absolute; inset:0; pointer-events:none; transition:opacity .4s; }
+  .grid-lines { position:absolute; inset:0;
+    background:
+      linear-gradient(to right, transparent calc(33.333% - .5px), rgba(255,255,255,.22) 33.333%, transparent calc(33.333% + .5px)),
+      linear-gradient(to right, transparent calc(66.666% - .5px), rgba(255,255,255,.22) 66.666%, transparent calc(66.666% + .5px)),
+      linear-gradient(to bottom, transparent calc(33.333% - .5px), rgba(255,255,255,.22) 33.333%, transparent calc(33.333% + .5px)),
+      linear-gradient(to bottom, transparent calc(66.666% - .5px), rgba(255,255,255,.22) 66.666%, transparent calc(66.666% + .5px)); }
+  .af { position:absolute; width:2.4%; aspect-ratio:1; border:1.5px solid rgba(255,255,255,.55); transform:translate(-50%,-50%); transition:all .15s; }
+  .af.lock { border-color:var(--af); box-shadow:0 0 10px var(--af); background:rgba(125,255,138,.12); }
+  .vf-info { position:absolute; left:0; right:0; bottom:calc(50% - min(84vw,118vh)/3 - 3.2rem); display:flex; justify-content:center; gap:2.2rem;
+             font-family:"JetBrains Mono", monospace; color:var(--af); font-size:clamp(.8rem, 1.4vw, 1.1rem); letter-spacing:.06em; text-shadow:0 0 6px rgba(125,255,138,.6); transition:opacity .4s; }
+  .vf-info .dot { width:.7em; height:.7em; border-radius:50%; background:var(--af); align-self:center; opacity:0; transition:opacity .15s; }
+  .vf-info .dot.on { opacity:1; }
+
+  /* shutter blink + flash */
+  #shutter { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; }
+  #flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+  .shoot #shutter { animation:blink .26s ease-out; }
+  .shoot #flash { animation:flash .7s ease-out .1s; }
+  @keyframes blink { 0%{opacity:0} 25%{opacity:1} 70%{opacity:1} 100%{opacity:0} }
+  @keyframes flash { 0%{opacity:.85} 100%{opacity:0} }
+
+  /* captured state: the viewfinder becomes the project "photo" */
+  .captured #vf { background:radial-gradient(120% 90% at 50% 40%, #1d2026, #090a0c); }
+  .captured .vf-chrome, .captured .vf-info { opacity:0; }
+  .captured .vf-window { width:min(72vw, 92vh); margin-top:-6vh; border-radius:6px; box-shadow:0 40px 120px rgba(0,0,0,.7), 0 0 0 10px #f3f1ec; transform:rotate(-1.2deg); }
+  .captured .vf-window::after { opacity:0; }
+  .captured .vf-window img { filter:none; transform:none; }
+  .caption { position:absolute; bottom:4.5vh; left:0; right:0; text-align:center; opacity:0; transform:translateY(12px); transition:all .6s .5s; pointer-events:none; }
+  .caption h2 { font-size:clamp(1.2rem, 2.4vw, 1.9rem); font-weight:800; }
+  .caption p { color:var(--muted); margin-top:.35rem; font-size:.95rem; }
+  .captured .caption { opacity:1; transform:none; pointer-events:auto; }
+
+  /* after-scroll content */
+  .after { min-height:80vh; padding:14vh 8vw; max-width:60rem; margin:0 auto; }
+  .after h3 { font-size:2rem; margin-bottom:1rem; }
+  .after p { color:#b9bdc5; line-height:1.7; }
+  #loading { position:absolute; inset:0; display:grid; place-items:center; color:var(--muted); font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<section id="track">
+  <div id="stage">
+    <canvas id="gl"></canvas>
+    <div id="loading">Loading camera…</div>
+
+    <div class="copy" id="copy">
+      <small>Selected work</small>
+      <h1>Every project,<br>framed.</h1>
+      <p>Scroll to look through the viewfinder and take the shot.</p>
+    </div>
+    <div class="hint" id="hint">Scroll</div>
+
+    <div id="vf">
+      <div class="vf-window" id="vfWindow">
+        <img id="projectImg" alt="Project preview">
+        <div class="vf-chrome" id="vfChrome"><div class="grid-lines"></div></div>
+      </div>
+      <div class="vf-info" id="vfInfo">
+        <span>M</span><span>1/250</span><span>F5.6</span><span>±0</span><span>ISO 200</span><span class="dot" id="focusDot"></span><span>[42]</span>
+      </div>
+      <div class="caption">
+        <h2 id="capTitle">Northwind Studio — Website redesign</h2>
+        <p>Brand · Web · 2026</p>
+      </div>
+    </div>
+
+    <div id="shutter"></div>
+    <div id="flash"></div>
+  </div>
+</section>
+
+<section class="after">
+  <h3>About the project</h3>
+  <p>Your case-study content continues here once the shot has been taken. Scroll back up to reverse the animation.</p>
+</section>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+/* =============================== CONFIG ===============================
+   PROJECT_IMAGE: URL of your project screenshot (3:2 looks best).
+   Leave null to use the generated placeholder.                          */
+const CONFIG = {
+  MODEL_URL: "./dslr_camera.web.glb",   // compressed (meshopt + webp); dslr_camera.glb is the uncompressed original
+  PROJECT_IMAGE: null,
+  // scroll progress (0..1 over #track) at which each beat happens
+  BEATS: { orbitStart: 0.18, behind: 0.42, aligned: 0.56, inside: 0.66, focusEnd: 0.80, shoot: 0.86 },
+};
+
+/* ---------- project image (placeholder drawn on a canvas) ---------- */
+function placeholderProject() {
+  const c = document.createElement("canvas"); c.width = 1800; c.height = 1200;
+  const g = c.getContext("2d");
+  const bg = g.createLinearGradient(0, 0, 1800, 1200); bg.addColorStop(0, "#f4efe6"); bg.addColorStop(1, "#e6dccb");
+  g.fillStyle = bg; g.fillRect(0, 0, 1800, 1200);
+  g.fillStyle = "#1d2a24"; g.font = "700 34px Inter, sans-serif"; g.fillText("northwind", 110, 110);
+  g.font = "500 24px Inter, sans-serif"; g.fillStyle = "#4b5a52";
+  ["Work", "Studio", "Journal", "Contact"].forEach((t, i) => g.fillText(t, 1100 + i * 150, 108));
+  g.fillStyle = "#1d2a24"; g.font = "800 132px Inter, sans-serif";
+  g.fillText("Design that", 110, 400); g.fillText("grows with you.", 110, 540);
+  g.font = "400 32px Inter, sans-serif"; g.fillStyle = "#4b5a52";
+  g.fillText("A calm, modern identity and website for a landscape studio.", 112, 630);
+  g.fillStyle = "#1d2a24"; roundRect(g, 110, 700, 280, 84, 42); g.fill();
+  g.fillStyle = "#f4efe6"; g.font = "600 28px Inter, sans-serif"; g.fillText("View project →", 152, 752);
+  const cols = ["#7f9c7a", "#c9a46b", "#3e5a4e"];
+  cols.forEach((col, i) => { g.fillStyle = col; roundRect(g, 110 + i * 540, 860, 500, 260, 24); g.fill(); });
+  g.fillStyle = "#2f4a3f"; g.beginPath(); g.arc(1430, 420, 230, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#c9a46b"; g.beginPath(); g.arc(1500, 330, 110, 0, Math.PI * 2); g.fill();
+  return c;
+  function roundRect(g, x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+}
+
+async function loadProjectSource() {
+  if (!CONFIG.PROJECT_IMAGE) return placeholderProject();
+  const img = new Image(); img.crossOrigin = "anonymous"; img.src = CONFIG.PROJECT_IMAGE;
+  await img.decode(); return img;
+}
+
+/* =============================== THREE SETUP =============================== */
+const canvas = document.getElementById("gl");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.55;
+
+const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(3, 5, 4); scene.add(key);
+const rim = new THREE.DirectionalLight(0xcfe0ff, 2.0); rim.position.set(-4, 3, -4); scene.add(rim);
+const fill = new THREE.DirectionalLight(0xffe2c4, 0.8); fill.position.set(-3, 1, 3); scene.add(fill);
+
+const view = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+
+// soft contact shadow
+const sc = document.createElement("canvas"); sc.width = sc.height = 256;
+const sg = sc.getContext("2d"); const rg = sg.createRadialGradient(128, 128, 0, 128, 128, 128);
+rg.addColorStop(0, "rgba(0,0,0,.65)"); rg.addColorStop(1, "rgba(0,0,0,0)"); sg.fillStyle = rg; sg.fillRect(0, 0, 256, 256);
+const shadow = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.9),
+  new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
+shadow.rotation.x = -Math.PI / 2; shadow.position.y = -0.005;
+
+const rig = new THREE.Group();   // pointer-parallax wrapper
+scene.add(rig); rig.add(shadow);
+
+let model, anchor, screenMat;
+const projectSrc = await loadProjectSource();
+const projectURL = projectSrc instanceof HTMLCanvasElement ? projectSrc.toDataURL("image/jpeg", 0.9) : projectSrc.src;
+document.getElementById("projectImg").src = projectURL;
+
+const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(CONFIG.MODEL_URL);
+model = gltf.scene; rig.add(model);
+document.getElementById("loading").remove();
+
+// live-view on the rear LCD: put the project on the "Screen" mesh
+const screen = model.getObjectByName("Screen");
+if (screen) {
+  const tex = new THREE.CanvasTexture(projectSrc instanceof HTMLCanvasElement ? projectSrc : toCanvas(projectSrc));
+  tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  screenMat = screen.material.clone();
+  screenMat.color.set(0x000000); screenMat.emissive.set(0xffffff); screenMat.emissiveMap = tex; screenMat.emissiveIntensity = 0;
+  screen.material = screenMat;
+}
+function toCanvas(img) { const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext("2d").drawImage(img, 0, 0); return c; }
+
+anchor = new THREE.Vector3();
+model.updateMatrixWorld(true);
+model.getObjectByName("ViewfinderAnchor").getWorldPosition(anchor);   // eyepiece, back of camera (-Z)
+
+/* =============================== CAMERA PATH ===============================
+   Keyframes are spherical offsets around a moving target so the orbit
+   swings around the body instead of cutting through it.                  */
+const center = new THREE.Vector3(0, 0.5, 0);
+const B = CONFIG.BEATS;
+const K = [
+  { p: 0.00,            tgt: center.clone(),                                 r: 4.6, phi: 1.22, theta: 0.62, fov: 32, shift: 0.2 },
+  { p: B.orbitStart,    tgt: center.clone(),                                 r: 4.2, phi: 1.25, theta: 0.30, fov: 32, shift: 0 },
+  { p: B.behind,        tgt: new THREE.Vector3(anchor.x, anchor.y - 0.3, 0), r: 3.2, phi: 1.28, theta: Math.PI - 0.55, fov: 32 },
+  { p: B.aligned,       tgt: anchor.clone().add(new THREE.Vector3(0, 0, 1)), r: 1.75, phi: Math.PI / 2, theta: Math.PI, fov: 30 },
+  { p: B.inside,        tgt: anchor.clone().add(new THREE.Vector3(0, 0, 1)), r: 1.02, phi: Math.PI / 2, theta: Math.PI, fov: 26 },
+];
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const sph = new THREE.Spherical(), tmpT = new THREE.Vector3(), tmpP = new THREE.Vector3();
+
+function cameraAt(p) {
+  let i = 0; while (i < K.length - 2 && p > K[i + 1].p) i++;
+  const a = K[i], b = K[i + 1];
+  const t = ease(THREE.MathUtils.clamp((p - a.p) / (b.p - a.p), 0, 1));
+  tmpT.lerpVectors(a.tgt, b.tgt, t);
+  sph.set(THREE.MathUtils.lerp(a.r, b.r, t), THREE.MathUtils.lerp(a.phi, b.phi, t), THREE.MathUtils.lerp(a.theta, b.theta, t));
+  tmpP.setFromSpherical(sph).add(tmpT);
+  view.position.copy(tmpP); view.lookAt(tmpT);
+  view.fov = THREE.MathUtils.lerp(a.fov, b.fov, t);
+  // horizontal framing shift (hero puts the camera to the right of the headline)
+  const shift = THREE.MathUtils.lerp(a.shift ?? 0, b.shift ?? 0, t) * (view.aspect > 1 ? 1 : 0);
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (shift) view.setViewOffset(w, h, -shift * w, 0, w, h); else view.clearViewOffset();
+  view.updateProjectionMatrix();
+}
+
+/* =============================== SCROLL & UI =============================== */
+const track = document.getElementById("track");
+const stage = document.getElementById("stage");
+const vf = document.getElementById("vf"), vfWin = document.getElementById("vfWindow");
+const copy = document.getElementById("copy"), hint = document.getElementById("hint");
+const dot = document.getElementById("focusDot");
+const range = (p, a, b) => THREE.MathUtils.clamp((p - a) / (b - a), 0, 1);
+
+// AF points
+const chrome = document.getElementById("vfChrome"); const afs = [];
+[[50,50],[35,50],[65,50],[50,35],[50,65],[25,40],[75,40],[25,60],[75,60]].forEach(([x, y]) => {
+  const d = document.createElement("div"); d.className = "af"; d.style.left = x + "%"; d.style.top = y + "%"; chrome.appendChild(d); afs.push(d);
+});
+
+let progress = 0, shot = false;
+function readScroll() {
+  const r = track.getBoundingClientRect();
+  progress = THREE.MathUtils.clamp(-r.top / (r.height - innerHeight), 0, 1);
+}
+addEventListener("scroll", readScroll, { passive: true });
+
+function updateUI(p) {
+  copy.style.opacity = 1 - range(p, 0.08, 0.2);
+  hint.style.opacity = 1 - range(p, 0.02, 0.08);
+  if (screenMat) screenMat.emissiveIntensity = 0.95 * range(p, B.orbitStart + 0.05, B.behind);
+  vf.style.opacity = range(p, B.aligned + 0.04, B.inside);
+  const f = range(p, B.inside, B.focusEnd);
+  vfWin.style.setProperty("--blur", (10 * (1 - f)).toFixed(2) + "px");
+  const locked = f >= 1;
+  afs.forEach((a, i) => a.classList.toggle("lock", locked && [0, 1, 2].includes(i)));
+  dot.classList.toggle("on", locked);
+
+  if (p >= B.shoot && !shot) { shot = true; shoot(); }
+  if (p < B.shoot - 0.02 && shot) { shot = false; stage.classList.remove("captured", "shoot"); }
+}
+
+function shoot() {
+  stage.classList.remove("shoot"); void stage.offsetWidth; stage.classList.add("shoot");
+  pressShutter();
+  setTimeout(() => shot && stage.classList.add("captured"), 140);
+}
+
+// tiny 3D shutter-press (visible if you tune beats so the shot happens outside the viewfinder)
+const shutterBtn = model.getObjectByName("ShutterButton");
+function pressShutter() {
+  if (!shutterBtn) return; const y0 = shutterBtn.position.y;
+  shutterBtn.position.y = y0 - 0.008; setTimeout(() => (shutterBtn.position.y = y0), 160);
+}
+
+// pointer parallax in the hero phase
+const pointer = new THREE.Vector2();
+addEventListener("pointermove", e => pointer.set(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5));
+
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false); view.aspect = w / h;
+  // on narrow screens, pull the camera back a little
+  K[0].r = K[1].r = (w / h < 1 ? 6.4 : 4.4);
+}
+addEventListener("resize", resize); resize(); readScroll();
+
+let smooth = progress;
+renderer.setAnimationLoop((time) => {
+  smooth += (progress - smooth) * 0.12;                 // scroll smoothing
+  const idle = 1 - range(smooth, 0.0, B.orbitStart);    // idle motion only in hero
+  rig.rotation.y += ((pointer.x * 0.35 + Math.sin(time * 0.0004) * 0.08) * idle - rig.rotation.y) * 0.06;
+  rig.rotation.x += ((pointer.y * 0.12) * idle - rig.rotation.x) * 0.06;
+  rig.position.y = Math.sin(time * 0.0012) * 0.03 * idle;
+  cameraAt(smooth);
+  updateUI(smooth);
+  if (smooth < B.inside + 0.02) renderer.render(scene, view);  // skip GPU work once inside the viewfinder
+});
+</script>
+</body>
+</html>

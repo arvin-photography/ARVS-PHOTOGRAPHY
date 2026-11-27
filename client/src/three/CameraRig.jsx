@@ -31,7 +31,7 @@ export default function CameraRig() {
     camera.lookAt(target);
 
     camera.fov = rig.fov;
-    camera.setViewOffset(size.width, size.height, 0, -rig.shiftY * size.height, size.width, size.height);
+    camera.setViewOffset(size.width, size.height, -rig.shiftX * size.width, -rig.shiftY * size.height, size.width, size.height);
     camera.updateProjectionMatrix();
 
     // live HUD readouts

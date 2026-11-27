@@ -15,6 +15,7 @@ export const rig = {
   tz: MODEL_CENTER[2],
   fov: 32,
   shiftY: 0, // screen-space vertical offset (fraction of viewport)
+  shiftX: 0, // screen-space horizontal offset (fraction of viewport, +ve = model moves right)
   idle: 1, // 1 = floating / mouse-reactive, 0 = locked for the viewfinder dolly
   ring: 0, // zoom ring rotation
   focus: 0, // focus ring rotation
